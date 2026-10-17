@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Comunícalo de México | Internet empresarial, hogar y eventos</title>
+    <meta name="description" content="Internet dedicado por fibra óptica para empresas, internet y telefonía para el hogar, internet para eventos, telefonía IP, redes, CCTV y monitoreo C2." />
+    <link rel="canonical" href="https://comunicalo.mx/" />
+    <meta name="theme-color" content="#142A44" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="Comunícalo de México" />
+    <meta property="og:title" content="Comunícalo de México | Internet empresarial, hogar y eventos" />
+    <meta property="og:description" content="Internet dedicado, internet para el hogar, eventos, telefonía IP, redes y seguridad." />
+    <meta property="og:image" content="https://comunicalo.mx/img/logo-comunicalo.png" />
+    <!--head-->
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/img/logo-comunicalo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+    <script>
+      // Aplica el tema guardado (o el del sistema) antes de pintar para evitar parpadeo
+      try {
+        var t = localStorage.getItem('tema');
+        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"><!--app--></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

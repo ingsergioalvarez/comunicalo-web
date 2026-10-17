@@ -1,0 +1,243 @@
+// Catálogo de servicios empresariales. Cada servicio tiene un "id" que se usa
+// como ancla en /empresas#<id> y en el cotizador.
+
+export const DIVISIONES = [
+  {
+    id: 'conectividad',
+    nombre: 'Conectividad empresarial',
+    icono: 'network',
+    pitch: 'Internet dedicado y enlaces privados sobre red propia con concesión federal.',
+    imagen: { src: '/img/red-fibra.webp', alt: 'Técnicos revisando racks bajo charolas de fibra óptica en un centro de datos', width: 720, height: 401 },
+    servicios: [
+      {
+        id: 'internet-dedicado',
+        titulo: 'Internet dedicado por fibra óptica',
+        icono: 'zap',
+        badge: 'Simétrico 1:1',
+        resumen: 'La misma velocidad de subida y bajada, sin compartir el ancho de banda y con IP fija homologada.',
+        beneficios: [
+          'Velocidad simétrica garantizada por contrato',
+          'Direcciones IP fijas públicas',
+          'Soporte técnico especializado los 365 días',
+          'Monitoreo proactivo del enlace',
+          'Escalable conforme crece tu operación',
+        ],
+        idealPara: 'Corporativos, plantas, hospitales, call centers y escuelas.',
+      },
+      {
+        id: 'microondas',
+        titulo: 'Enlaces por microondas y respaldo',
+        icono: 'radio',
+        badge: 'Despliegue rápido',
+        resumen: 'Radioenlaces punto a punto donde no llega la fibra o como segunda ruta para que tu operación nunca se detenga.',
+        beneficios: [
+          'Instalación sin obra civil ni canalización',
+          'Ruta de respaldo con conmutación automática',
+          'Ideal para parques industriales y bodegas',
+          'Capacidad escalable',
+        ],
+        idealPara: 'Naves industriales, obras y empresas que necesitan redundancia.',
+      },
+      {
+        id: 'internet-eventos',
+        titulo: 'Internet para eventos',
+        icono: 'calendar',
+        badge: 'Más de 5 años en eventos',
+        resumen: 'Conectividad temporal de alta capacidad para congresos, expos, conciertos, foros y transmisiones en vivo.',
+        beneficios: [
+          'WiFi de alta densidad para miles de dispositivos',
+          'Ancho de banda dedicado para streaming',
+          'Redes separadas para staff, prensa, cobro y público',
+          'Ingenieros en sitio durante el evento',
+        ],
+        idealPara: 'Organizadores de eventos, recintos, agencias y productoras.',
+      },
+      {
+        id: 'lan-to-lan',
+        titulo: 'Enlaces LAN to LAN',
+        icono: 'share',
+        badge: 'Red privada',
+        resumen: 'Conectamos tus oficinas, edificios y bodegas como si estuvieran en la misma red, sin pasar por internet público.',
+        beneficios: [
+          'Tráfico 100% privado entre sedes',
+          'Ancho de banda garantizado para ERP y respaldos',
+          'Menor latencia que una VPN sobre internet',
+          'Enlaces punto a punto o multipunto',
+        ],
+        idealPara: 'Empresas con sucursales, almacenes o varios edificios.',
+      },
+      {
+        id: 'vpn',
+        titulo: 'Redes privadas virtuales (VPN)',
+        icono: 'lock',
+        badge: 'Acceso remoto seguro',
+        resumen: 'Conexiones remotas cifradas para que tu equipo y tus sucursales trabajen con la información de la empresa de forma segura.',
+        beneficios: [
+          'Túneles cifrados sitio a sitio y de acceso remoto',
+          'Permisos por usuario y área',
+          'Optimizado para voz y videollamadas',
+          'Configuración y soporte incluidos',
+        ],
+        idealPara: 'Equipos remotos, despachos y empresas con sucursales.',
+      },
+    ],
+  },
+  {
+    id: 'ti',
+    nombre: 'TI y servicios administrados',
+    icono: 'server',
+    pitch: 'Telefonía, redes, ciberseguridad y centro de datos para que tu TI simplemente funcione.',
+    imagen: { src: '/img/data-center.webp', alt: 'Pasillo de racks de servidores en un centro de datos', width: 720, height: 401 },
+    servicios: [
+      {
+        id: 'telefonia-ip',
+        titulo: 'Telefonía IP y conmutador en la nube',
+        icono: 'phone',
+        badge: 'Ahorra en llamadas',
+        resumen: 'Troncales SIP, extensiones y conmutador virtual para reducir costos en llamadas locales y de larga distancia.',
+        beneficios: [
+          'Conserva tus números actuales (portabilidad)',
+          'Menú de bienvenida (IVR) y desvío por horarios',
+          'Extensiones en celular y computadora',
+          'Buzón de voz y grabación de llamadas',
+        ],
+        idealPara: 'Equipos de ventas, atención a clientes y oficinas.',
+      },
+      {
+        id: 'redes-wifi',
+        titulo: 'Redes y WiFi empresarial',
+        icono: 'wifi',
+        badge: 'Cobertura total',
+        resumen: 'Diseñamos tu red con base en tus necesidades: cobertura sin zonas muertas, roaming sin cortes y red de invitados.',
+        beneficios: [
+          'Access points empresariales administrados',
+          'Roaming continuo entre áreas',
+          'Red de invitados con portal cautivo',
+          'Segmentación por VLAN',
+        ],
+        idealPara: 'Oficinas, hoteles, hospitales, escuelas y almacenes.',
+      },
+      {
+        id: 'cableado',
+        titulo: 'Cableado estructurado llave en mano',
+        icono: 'cable',
+        badge: 'Certificado',
+        resumen: 'Cobre categoría 6/6A y fibra óptica con canalización, racks, certificación punto a punto y memoria técnica.',
+        beneficios: [
+          'Instalación bajo normas ANSI/TIA',
+          'Racks, gabinetes y organización',
+          'Fusión de fibra óptica',
+          'Memoria técnica y garantía',
+        ],
+        idealPara: 'Oficinas nuevas, remodelaciones y naves industriales.',
+      },
+      {
+        id: 'ciberseguridad',
+        titulo: 'Ciberseguridad y firewall administrado',
+        icono: 'shield',
+        badge: 'Protección continua',
+        resumen: 'Firewall de nueva generación configurado, actualizado y monitoreado por nosotros contra ransomware, malware y accesos no autorizados.',
+        beneficios: [
+          'Prevención de intrusiones (IPS)',
+          'Filtrado web y bloqueo de phishing',
+          'Reportes periódicos de amenazas',
+          'Priorización de aplicaciones críticas',
+        ],
+        idealPara: 'Empresas con datos sensibles, ERP o transacciones.',
+      },
+      {
+        id: 'data-center',
+        titulo: 'Servidores y data center',
+        icono: 'database',
+        badge: 'Housing y hosting',
+        resumen: 'Aloja tus servidores con energía respaldada, clima de precisión y conexión directa a nuestra red.',
+        beneficios: [
+          'Energía con UPS y planta de emergencia',
+          'Climatización de precisión',
+          'Acceso controlado y videovigilancia',
+          'Conexión directa a la red de Comunícalo',
+        ],
+        idealPara: 'ERP, respaldos, plataformas web y archivo digital.',
+      },
+    ],
+  },
+  {
+    id: 'seguridad',
+    nombre: 'Seguridad electrónica y monitoreo',
+    icono: 'camera',
+    pitch: 'Videovigilancia profesional con monitoreo activo desde nuestro Centro de Comando y Control (C2).',
+    imagen: { src: '/img/monitoreo-c2.webp', alt: 'Monitoristas frente a un muro de video en un centro de monitoreo', width: 720, height: 283, banner: true },
+    servicios: [
+      {
+        id: 'cctv',
+        titulo: 'Instalación de cámaras (CCTV)',
+        icono: 'camera',
+        badge: 'Alta definición',
+        resumen: 'Cámaras IP fijas, domos y PTZ con visión nocturna, ubicadas estratégicamente para eliminar puntos ciegos.',
+        beneficios: [
+          'Diseño de cobertura sin puntos ciegos',
+          'Grabación local y en la nube',
+          'Visualización desde tu celular',
+          'Equipo para exterior e intemperie',
+        ],
+        idealPara: 'Empresas, comercios, escuelas y fraccionamientos.',
+      },
+      {
+        id: 'monitoreo-c2',
+        titulo: 'Monitoreo 24/7 en Centro C2',
+        icono: 'eye',
+        badge: 'Vigilancia activa',
+        resumen: 'Monitoristas vigilan tus cámaras en tiempo real y activan protocolos de respuesta ante cualquier incidente.',
+        beneficios: [
+          'Operación 24/7/365',
+          'Protocolos de disuasión y aviso a autoridades',
+          'Custodia virtual en aperturas y cierres',
+          'Bitácora digital de incidencias',
+        ],
+        idealPara: 'Parques industriales, bodegas, corporativos y fraccionamientos.',
+      },
+      {
+        id: 'analitica-lpr',
+        titulo: 'Analítica de video y lectura de placas',
+        icono: 'scan',
+        badge: 'Inteligencia artificial',
+        resumen: 'Lectura automática de placas, detección de intrusos y conteo de personas y vehículos.',
+        beneficios: [
+          'Control de acceso vehicular por placa',
+          'Alertas por cruce de perímetro',
+          'Conteo de aforo',
+          'Búsqueda inteligente de eventos',
+        ],
+        idealPara: 'Accesos de fraccionamientos, estacionamientos y perímetros industriales.',
+      },
+      {
+        id: 'mantenimiento-cctv',
+        titulo: 'Pólizas de mantenimiento de CCTV',
+        icono: 'wrench',
+        badge: 'Siempre grabando',
+        resumen: 'Mantenimiento preventivo para que tus cámaras graben nítido y tus respaldos estén listos cuando los necesites.',
+        beneficios: [
+          'Limpieza y ajuste periódico',
+          'Revisión de discos y días de grabación',
+          'Actualización de firmware',
+          'Atención prioritaria',
+        ],
+        idealPara: 'Sistemas existentes que necesitan diagnóstico o rescate.',
+      },
+    ],
+  },
+];
+
+export const TODOS_LOS_SERVICIOS = DIVISIONES.flatMap((d) =>
+  d.servicios.map((s) => ({ ...s, division: d.id, divisionNombre: d.nombre }))
+);
+
+// Usos más comunes del internet dedicado (sitio original)
+export const USOS_INTERNET_DEDICADO = [
+  'Telefonía IP',
+  'Videovigilancia y cámaras IP',
+  'Nube: archivos y facturación',
+  'Educación y capacitación en línea',
+  'Videoconferencias',
+  'Streaming y transmisiones en vivo',
+];

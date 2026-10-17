@@ -1,0 +1,34 @@
+# Para hosting Apache / cPanel. (Si usas nginx, ver deploy/nginx.conf)
+Options -MultiViews
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://comunicalo.mx%{REQUEST_URI} [L,R=301]
+
+# URLs del sitio anterior
+RewriteCond %{QUERY_STRING} accion=Internet-Eventos
+RewriteRule ^index\.php$ /eventos? [L,R=301]
+RewriteCond %{QUERY_STRING} accion=(Internet-Empresarial|Telefonia-IP|Servicios-LAN-to-LAN|Servicios-VPN|Redes-y-Wifi|Servidores-Data-Center|Productos-y-Servicios)
+RewriteRule ^index\.php$ /empresas? [L,R=301]
+RewriteCond %{QUERY_STRING} accion=(Contacto|Atencion-clientes|Escalacion|EscalacionR)
+RewriteRule ^index\.php$ /contacto? [L,R=301]
+RewriteCond %{QUERY_STRING} accion=.+
+RewriteRule ^index\.php$ /transparencia? [L,R=301]
+RewriteRule ^index\.php$ / [L,R=301]
+RewriteRule ^MCR/ /cobertura [L,R=301]
+RewriteRule ^(OTE|TB)/?$ /transparencia [L,R=301]
+
+# /hogar -> /hogar/index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*?)/?$ /$1/index.html [L]
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType application/pdf "access plus 30 days"
+</IfModule>
