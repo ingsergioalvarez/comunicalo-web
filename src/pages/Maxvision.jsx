@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { ArrowRight, MessageCircle, Wifi, Tv, Phone, MapPin, CheckCircle2, ShieldCheck, CreditCard } from 'lucide-react';
 import { Link, Ext } from '../router';
-import { SectionHead, Checklist, Faq, CtaBand, Foto, PlanCard } from '../components/ui';
-import { whatsappUrl, TELEFONOS, LINKS } from '../data/site';
+import { SectionHead, Checklist, Faq, CtaBand, PlanCard } from '../components/ui';
+import ListaPlanes from '../components/ListaPlanes';
+import { whatsappUrl, AREAS, TELEFONOS, LINKS } from '../data/site';
 import {
   PLANES_MAXICOM,
   PLANES_TRIPLE_PLAY,
@@ -55,18 +56,16 @@ export default function Maxvision() {
   return (
     <>
       {/* HERO MAXVISION */}
-      <section className="page-hero mx">
-        <div className="container split" style={{ alignItems: 'center' }}>
+      <section className="page-hero page-hero--foto page-hero--alto mx">
+        <img src="/img/maxvision-familia.webp" alt="" className="page-hero-foto" width={1024} height={372} fetchpriority="high" decoding="async" />
+        <div className="container">
           <div>
             <p className="crumbs"><Link to="/hogar">Hogar</Link> › MAXVISION</p>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.12)', padding: '6px 14px', borderRadius: 999, marginBottom: 12 }}>
-              <Tv size={16} />
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                MAXVISION · Otumba y Axapusco
-              </span>
-            </div>
-            <h1 className="h1 mt-1">
-              Internet, telefonía y televisión para tu hogar en Otumba y Axapusco
+            <span className="mx-logo">
+              <img src="/img/logo-maxvision.webp" alt="MAXVISION" width={545} height={96} fetchpriority="high" decoding="async" />
+            </span>
+            <h1 className="h1">
+              Internet, telefonía y TV en Otumba y Axapusco
             </h1>
             <p className="lead">
               Conexión de alta velocidad con <strong>televisión disponible en toda la red</strong>. Elige entre paquetes Triple Play con 70 canales (TriPP), Doble Play (MaxiCom) o servicio de televisión con decodificador digital.
@@ -90,18 +89,17 @@ export default function Maxvision() {
             <div className="btn-row mt-3">
               <a href="#triple-play" className="btn btn-mx btn-lg">Ver paquetes con TV <ArrowRight size={18} /></a>
               <a href="#maxicom" className="btn btn-ghost-light btn-lg">Planes MaxiCom</a>
-              <a href={whatsappUrl('Hola MAXVISION, quiero información sobre la cobertura y paquetes en Otumba y Axapusco.')} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">
+              <a href={whatsappUrl('Hola MAXVISION, quiero información sobre la cobertura y paquetes en Otumba y Axapusco.', AREAS.ventasHogar.wa)} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light btn-lg">
                 <MessageCircle size={18} /> Pregúntanos por WhatsApp
               </a>
             </div>
           </div>
-          <Foto src="/img/maxvision-hogar.webp" alt="Familia viendo televisión en una sala en Otumba" width={720} height={401} className="foto-wide" prioridad />
         </div>
       </section>
 
       {/* SUBNAV DE SECCIONES MAXVISION */}
       <nav className="subnav" aria-label="Secciones de MAXVISION">
-        <div className="container division-nav" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+        <div className="container division-nav">
           <a href="#triple-play" className="chip"><Tv size={15} /> Triple Play (Internet + TV + Teléfono)</a>
           <a href="#maxicom" className="chip">Doble Play MaxiCom (Internet + Teléfono)</a>
           <a href="#solo-tv" className="chip">Solo Televisión ($280)</a>
@@ -113,7 +111,7 @@ export default function Maxvision() {
       </nav>
 
       {/* SECCIÓN 1: TRIPLE PLAY (TRIPP CON TV EN TODA LA RED DE OTUMBA Y AXAPUSCO) */}
-      <section className="section" id="triple-play">
+      <section className="section section--planes" id="triple-play">
         <div className="container">
           <SectionHead
             eyebrow="TriPP · Triple Play Registrado IFT"
@@ -121,16 +119,12 @@ export default function Maxvision() {
           >
             Disponible en <strong>toda la red de MAXVISION en Otumba y Axapusco</strong>. Todo en una sola factura con módem WiFi y decodificador digital.
           </SectionHead>
-          <div className="plans plans-5">
-            {PLANES_TRIPLE_PLAY.map((p) => (
-              <PlanCard key={p.id} plan={p} tv />
-            ))}
-          </div>
+          <ListaPlanes planes={PLANES_TRIPLE_PLAY} tv mx etiqueta="Paquetes Triple Play TriPP" />
         </div>
       </section>
 
       {/* SECCIÓN 2: DOBLE PLAY (MAXICOM - INTERNET + TELEFONÍA) */}
-      <section className="section section--alt" id="maxicom">
+      <section className="section section--planes section--alt" id="maxicom">
         <div className="container">
           <SectionHead
             eyebrow="MaxiCom · Doble Play Registrado IFT"
@@ -138,48 +132,27 @@ export default function Maxvision() {
           >
             Planes de 10 a 100 Mbps prepago con recargas cada 30 días, minutos incluidos y módem WiFi en comodato.
           </SectionHead>
-          <div className="plans plans-4">
-            {PLANES_MAXICOM.map((p) => (
-              <PlanCard key={p.id} plan={p} />
-            ))}
-          </div>
+          <ListaPlanes planes={PLANES_MAXICOM} mx etiqueta="Planes Doble Play MaxiCom" />
         </div>
       </section>
 
       {/* SECCIÓN 3: SOLO TELEVISIÓN */}
-      <section className="section" id="solo-tv">
+      <section className="section section--planes" id="solo-tv">
         <div className="container">
           <SectionHead eyebrow="Solo Televisión" title="¿Buscas únicamente señal de televisión por cable en tu domicilio?" />
-          <div style={{ maxWidth: 650, margin: '0 auto' }}>
-            <article className="plan plan--featured" style={{ textAlign: 'center' }}>
-              <span className="badge badge-top" style={{ background: 'var(--mx)', color: '#fff' }}>Folio IFT: {PLAN_TV.folio}</span>
-              <span className="icon-box mx" style={{ margin: '0 auto' }}><Tv size={24} /></span>
-              <div className="plan-name mt-2">{PLAN_TV.nombre}: Televisión Restringida</div>
-              <div className="plan-speed">{PLAN_TV.canales}<small> canales</small></div>
-              <div className="xs muted">Programación nacional, cine, infantiles, deportes y música</div>
-              <div className="plan-price mt-2"><b>{formatoPrecio(PLAN_TV.precio)}</b><span>/mes</span></div>
-              <Checklist
-                items={[
-                  '1 decodificador digital incluido',
-                  `Decodificador adicional disponible por solo ${formatoPrecio(PLAN_TV.decodificadorAdicional)}/mes`,
-                  'Sin plazo forzoso',
-                  'Cobertura en Otumba y Axapusco',
-                ]}
-              />
-              <div className="plan-foot mt-3">
-                <a
-                  className="btn btn-mx btn-lg btn-block"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={whatsappUrl(`Hola MAXVISION, quiero contratar ${PLAN_TV.nombre} (${PLAN_TV.canales} canales) por ${formatoPrecio(PLAN_TV.precio)} al mes en Otumba/Axapusco.`)}
-                >
-                  Contratar MaxiCom TV <ArrowRight size={16} />
-                </a>
-                <p className="plan-legal mt-2">
-                  Prepago. Instalación {formatoPrecio(PLAN_TV.instalacion)}, provisión de equipo {formatoPrecio(PLAN_TV.decodificador)}. <a href={PLAN_TV.pdf} target="_blank" rel="noopener">Ficha oficial IFT (PDF)</a>
-                </p>
-              </div>
-            </article>
+          <div style={{ maxWidth: 420, margin: '0 auto' }}>
+            <PlanCard
+              tv
+              plan={{
+                ...PLAN_TV,
+                bajada: PLAN_TV.canales,
+                canales: PLAN_TV.canales,
+                ideal: 'Programación nacional, cine, infantiles, deportes y música con decodificador digital',
+                destacado: true,
+                badge: 'Solo TV · 79 Canales',
+                marca: 'MAXVISION',
+              }}
+            />
           </div>
         </div>
       </section>
@@ -209,6 +182,7 @@ export default function Maxvision() {
       <section className="section section--alt">
         <div className="container">
           <CtaBand
+            to="/cotizar?para=hogar"
             mx
             title="Conéctate hoy a MAXVISION en Otumba y Axapusco"
             text="Escríbenos por WhatsApp con tu calle y colonia para validar cobertura y programar tu instalación."

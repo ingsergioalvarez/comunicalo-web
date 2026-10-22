@@ -7,12 +7,13 @@ export const DIVISIONES = [
     nombre: 'Conectividad empresarial',
     icono: 'network',
     pitch: 'Internet dedicado y enlaces privados sobre red propia con concesión federal.',
-    imagen: { src: '/img/red-fibra.webp', alt: 'Técnicos revisando racks bajo charolas de fibra óptica en un centro de datos', width: 720, height: 401 },
+    imagen: { src: '/img/red-fibra.webp', alt: 'Ingeniera de telecomunicaciones trabajando en distribuidor de fibra óptica', width: 720, height: 405, ilustrativa: false },
     servicios: [
       {
         id: 'internet-dedicado',
         titulo: 'Internet dedicado por fibra óptica',
         icono: 'zap',
+        imagen: { src: '/img/empresas/internet-dedicado.webp', alt: 'Ilustración de una oficina conectada con internet dedicado por fibra óptica' },
         badge: 'Simétrico 1:1',
         resumen: 'La misma velocidad de subida y bajada, sin compartir el ancho de banda y con IP fija homologada.',
         beneficios: [
@@ -28,6 +29,7 @@ export const DIVISIONES = [
         id: 'microondas',
         titulo: 'Enlaces por microondas y respaldo',
         icono: 'radio',
+        imagen: { src: '/img/empresas/microondas.webp', alt: 'Ilustración de un enlace punto a punto por microondas' },
         badge: 'Despliegue rápido',
         resumen: 'Radioenlaces punto a punto donde no llega la fibra o como segunda ruta para que tu operación nunca se detenga.',
         beneficios: [
@@ -42,7 +44,8 @@ export const DIVISIONES = [
         id: 'internet-eventos',
         titulo: 'Internet para eventos',
         icono: 'calendar',
-        badge: 'Más de 5 años en eventos',
+        imagen: { src: '/img/empresas/internet-eventos.webp', alt: 'Ilustración de WiFi de alta densidad en un evento' },
+        badge: 'Más de 10 años en eventos',
         resumen: 'Conectividad temporal de alta capacidad para congresos, expos, conciertos, foros y transmisiones en vivo.',
         beneficios: [
           'WiFi de alta densidad para miles de dispositivos',
@@ -56,6 +59,7 @@ export const DIVISIONES = [
         id: 'lan-to-lan',
         titulo: 'Enlaces LAN to LAN',
         icono: 'share',
+        imagen: { src: '/img/empresas/lan-to-lan.webp', alt: 'Ilustración de sucursales conectadas en una red privada LAN to LAN' },
         badge: 'Red privada',
         resumen: 'Conectamos tus oficinas, edificios y bodegas como si estuvieran en la misma red, sin pasar por internet público.',
         beneficios: [
@@ -70,6 +74,7 @@ export const DIVISIONES = [
         id: 'vpn',
         titulo: 'Redes privadas virtuales (VPN)',
         icono: 'lock',
+        imagen: { src: '/img/empresas/vpn.webp', alt: 'Ilustración de acceso remoto seguro por VPN' },
         badge: 'Acceso remoto seguro',
         resumen: 'Conexiones remotas cifradas para que tu equipo y tus sucursales trabajen con la información de la empresa de forma segura.',
         beneficios: [
@@ -87,12 +92,13 @@ export const DIVISIONES = [
     nombre: 'TI y servicios administrados',
     icono: 'server',
     pitch: 'Telefonía, redes, ciberseguridad y centro de datos para que tu TI simplemente funcione.',
-    imagen: { src: '/img/data-center.webp', alt: 'Pasillo de racks de servidores en un centro de datos', width: 720, height: 401 },
+    imagen: { src: '/img/data-center.webp', alt: 'Ingeniero de sistemas supervisando racks de servidores en centro de datos', width: 720, height: 405, ilustrativa: false },
     servicios: [
       {
         id: 'telefonia-ip',
         titulo: 'Telefonía IP y conmutador en la nube',
         icono: 'phone',
+        imagen: { src: '/img/empresas/telefonia-ip.webp', alt: 'Ilustración de un conmutador de telefonía IP en la nube' },
         badge: 'Ahorra en llamadas',
         resumen: 'Troncales SIP, extensiones y conmutador virtual para reducir costos en llamadas locales y de larga distancia.',
         beneficios: [
@@ -107,6 +113,7 @@ export const DIVISIONES = [
         id: 'redes-wifi',
         titulo: 'Redes y WiFi empresarial',
         icono: 'wifi',
+        imagen: { src: '/img/empresas/redes-wifi.webp', alt: 'Ilustración de una red WiFi empresarial' },
         badge: 'Cobertura total',
         resumen: 'Diseñamos tu red con base en tus necesidades: cobertura sin zonas muertas, roaming sin cortes y red de invitados.',
         beneficios: [
@@ -121,6 +128,7 @@ export const DIVISIONES = [
         id: 'cableado',
         titulo: 'Cableado estructurado llave en mano',
         icono: 'cable',
+        imagen: { src: '/img/empresas/cableado.webp', alt: 'Ilustración de cableado estructurado en un rack' },
         badge: 'Certificado',
         resumen: 'Cobre categoría 6/6A y fibra óptica con canalización, racks, certificación punto a punto y memoria técnica.',
         beneficios: [
@@ -135,6 +143,7 @@ export const DIVISIONES = [
         id: 'ciberseguridad',
         titulo: 'Ciberseguridad y firewall administrado',
         icono: 'shield',
+        imagen: { src: '/img/empresas/ciberseguridad.webp', alt: 'Ilustración de ciberseguridad y firewall administrado' },
         badge: 'Protección continua',
         resumen: 'Firewall de nueva generación configurado, actualizado y monitoreado por nosotros contra ransomware, malware y accesos no autorizados.',
         beneficios: [
@@ -149,6 +158,7 @@ export const DIVISIONES = [
         id: 'data-center',
         titulo: 'Servidores y data center',
         icono: 'database',
+        imagen: { src: '/img/empresas/data-center.webp', alt: 'Ilustración de un data center con racks de servidores' },
         badge: 'Housing y hosting',
         resumen: 'Aloja tus servidores con energía respaldada, clima de precisión y conexión directa a nuestra red.',
         beneficios: [
@@ -166,12 +176,13 @@ export const DIVISIONES = [
     nombre: 'Seguridad electrónica y monitoreo',
     icono: 'camera',
     pitch: 'Videovigilancia profesional con monitoreo activo desde nuestro Centro de Comando y Control (C2).',
-    imagen: { src: '/img/monitoreo-c2.webp', alt: 'Monitoristas frente a un muro de video en un centro de monitoreo', width: 720, height: 283, banner: true },
+    imagen: { src: '/img/monitoreo-c2-header.webp', alt: 'Operadores en centro de monitoreo C2 frente a videowall de vigilancia 24/7', width: 720, height: 405, ilustrativa: false },
     servicios: [
       {
         id: 'cctv',
         titulo: 'Instalación de cámaras (CCTV)',
         icono: 'camera',
+        imagen: { src: '/img/empresas/cctv.webp', alt: 'Ilustración de cámaras de videovigilancia CCTV' },
         badge: 'Alta definición',
         resumen: 'Cámaras IP fijas, domos y PTZ con visión nocturna, ubicadas estratégicamente para eliminar puntos ciegos.',
         beneficios: [
@@ -186,6 +197,7 @@ export const DIVISIONES = [
         id: 'monitoreo-c2',
         titulo: 'Monitoreo 24/7 en Centro C2',
         icono: 'eye',
+        imagen: { src: '/img/empresas/monitoreo-c2.webp', alt: 'Centro de monitoreo C2 24/7 con operadores y muro de videovigilancia en tiempo real' },
         badge: 'Vigilancia activa',
         resumen: 'Monitoristas vigilan tus cámaras en tiempo real y activan protocolos de respuesta ante cualquier incidente.',
         beneficios: [
@@ -200,6 +212,7 @@ export const DIVISIONES = [
         id: 'analitica-lpr',
         titulo: 'Analítica de video y lectura de placas',
         icono: 'scan',
+        imagen: { src: '/img/empresas/analitica-lpr.webp', alt: 'Analítica de video con reconocimiento automático de placas LPR y control perimetral' },
         badge: 'Inteligencia artificial',
         resumen: 'Lectura automática de placas, detección de intrusos y conteo de personas y vehículos.',
         beneficios: [
@@ -214,6 +227,7 @@ export const DIVISIONES = [
         id: 'mantenimiento-cctv',
         titulo: 'Pólizas de mantenimiento de CCTV',
         icono: 'wrench',
+        imagen: { src: '/img/empresas/mantenimiento-cctv.webp', alt: 'Técnico certificado realizando mantenimiento preventivo y diagnóstico a cámaras CCTV' },
         badge: 'Siempre grabando',
         resumen: 'Mantenimiento preventivo para que tus cámaras graben nítido y tus respaldos estén listos cuando los necesites.',
         beneficios: [

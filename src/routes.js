@@ -1,4 +1,7 @@
 // Metadatos SEO por página. Se usan en el prerender y al navegar.
+// "title" va en buscadores y al compartir; la pestaña del navegador siempre muestra TITULO_PESTANA.
+
+export const TITULO_PESTANA = 'Comunícalo';
 
 export const ROUTES = {
   '/': {
@@ -35,7 +38,7 @@ export const ROUTES = {
   },
   '/contacto': {
     title: 'Contacto, soporte y pagos | Comunícalo',
-    description: 'Teléfonos de ventas y soporte, WhatsApp, portal de pagos y oficinas en Tlalnepantla, Estado de México.',
+    description: 'Teléfonos de ventas y soporte, WhatsApp, portal de pagos y oficinas en Cd. Satélite, Naucalpan, Estado de México.',
   },
 };
 

@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { ArrowRight, Phone, Tv, Wifi, FileText, CreditCard, MapPin, CheckCircle2, ShieldCheck, Sparkles, ExternalLink } from 'lucide-react';
-import { Link, Ext } from '../router';
-import { SectionHead, Checklist, LeadForm, Faq, PlanCard, Foto } from '../components/ui';
-import { TELEFONOS, LINKS, whatsappUrl } from '../data/site';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Phone, Tv, Wifi, FileText, CreditCard, MapPin, MessageCircle, CheckCircle2, ShieldCheck, ExternalLink } from 'lucide-react';
+import { Link, Ext, useRouter } from '../router';
+import { SectionHead, Checklist, Faq, Foto } from '../components/ui';
+import { BannerCotizar, urlCotizar } from '../components/Cotiza';
+import ListaPlanes from '../components/ListaPlanes';
+import CarruselAvisos from '../components/CarruselAvisos';
+import { TELEFONOS, LINKS, AREAS, WHATSAPP_BOT_HOGAR, whatsappUrl } from '../data/site';
+import { COMUNICADOS, SLIDES_CHATBOT } from '../data/comunicados';
+import { doc } from '../data/documentos';
 import {
-  PLANES_COMUNICALO_PAQD,
-  PLANES_COMUNICALO_L,
+  ZONAS_HOGAR,
+  PLANES_HOGAR_DEFAULT,
   PLAN_SOLO_INTERNET,
-  COBERTURA_COMUNICALO,
   BARRA_CANALES,
   formatoPrecio
 } from '../data/planes';
@@ -20,7 +24,7 @@ function BarraCanalesVillaMagna() {
     <div className="card" style={{ border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1rem', flexWrap: 'wrap' }}>
         <span className="badge badge-accent" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px' }}>
-          <Tv size={15} /> Exclusivo Fracc. Villa Magna (Tizayuca)
+          <Tv size={15} /> Canales en Fracc. Villa Magna (Tizayuca)
         </span>
         <span className="small muted">79 canales con señal digital de alta definición</span>
       </div>
@@ -45,19 +49,166 @@ function BarraCanalesVillaMagna() {
         ))}
       </ul>
       <p className="xs muted mt-3">
-        Programación registrada ante el IFT y sujeta a cambios por el programador. <a className="link" href="/docs/barra-canales-tizayuca.pdf" target="_blank" rel="noopener">Ver barra completa oficial (PDF)</a>
+        Programación registrada ante el IFT y sujeta a cambios por el programador. <a className="link" href={doc('barra-canales-tizayuca.pdf')} target="_blank" rel="noopener">Ver barra completa oficial (PDF)</a>
       </p>
     </div>
   );
 }
 
+// Panel destacado para elegir municipio: es el primer paso para ver el precio.
+function SelectorZona({ zonaId, onChange }) {
+  const estados = [...new Set(ZONAS_HOGAR.map((z) => z.estado))];
+  const zona = ZONAS_HOGAR.find((z) => z.id === zonaId);
+  return (
+    <div className={`zona-picker${zona ? ' is-set' : ''}`}>
+      <span className="zona-picker-icon">
+        {zona ? <CheckCircle2 size={24} aria-hidden="true" /> : <MapPin size={24} aria-hidden="true" />}
+      </span>
+      <div className="zona-picker-body">
+        <label htmlFor="zona-hogar" className="zona-picker-label">
+          {zona ? 'Tu municipio' : 'Paso 1 · ¿En qué municipio vives?'}
+        </label>
+        <p className="zona-picker-status" aria-live="polite">
+          {zona ? (
+            <>Precios para <strong>{zona.nombre}</strong>, {zona.estado}.{zona.planesTv ? ' Aquí también tenemos televisión.' : ''}</>
+          ) : zonaId === 'otra' ? (
+            <>Escríbenos y te confirmamos cobertura y precio.{' '}
+              <a className="link" target="_blank" rel="noopener noreferrer" href={whatsappUrl('Hola Comunícalo, mi municipio no aparece en la lista. Vivo en...', AREAS.ventasHogar.wa)}>Consultar por WhatsApp</a>
+            </>
+          ) : (
+            'Elígelo para ver el precio que te corresponde.'
+          )}
+        </p>
+      </div>
+      <select id="zona-hogar" className="select zona-picker-select" style={{ scrollMarginTop: 140 }} value={zonaId} onChange={(e) => onChange(e.target.value)}>
+        <option value="">Selecciona tu municipio</option>
+        {estados.map((e) => (
+          <optgroup key={e} label={e}>
+            {ZONAS_HOGAR.filter((z) => z.estado === e).map((z) => (
+              <option key={z.id} value={z.id}>{z.nombre}{z.planesTv ? ' · Internet + TV' : ''}</option>
+            ))}
+          </optgroup>
+        ))}
+        <option value="otra">Mi municipio no aparece</option>
+      </select>
+    </div>
+  );
+}
+
+// Capa sobre los paquetes: invita a elegir municipio para conocer la oferta y el precio de la zona.
+function ZonaGate({ zonaId, onChange }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const estados = [...new Set(ZONAS_HOGAR.map((z) => z.estado))];
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') { setVisible(true); return undefined; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); io.disconnect(); } }, { threshold: 0.2 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div className="zona-gate" ref={ref}>
+      <div className={`zona-gate-card${visible ? ' is-visible' : ''}`}>
+        <div className="zona-gate-head">
+          <span className="zona-gate-icon"><MapPin size={20} aria-hidden="true" /></span>
+          <div>
+            <p className="zona-gate-step">Paso 1</p>
+            <p className="zona-gate-title">Elige tu municipio para ver tu precio</p>
+          </div>
+        </div>
+        <label htmlFor="zona-gate-select" className="sr-only">Municipio</label>
+        <select id="zona-gate-select" className="select" value={zonaId} onChange={(e) => onChange(e.target.value)}>
+          <option value="">Selecciona tu municipio</option>
+          {estados.map((e) => (
+            <optgroup key={e} label={e}>
+              {ZONAS_HOGAR.filter((z) => z.estado === e).map((z) => (
+                <option key={z.id} value={z.id}>{z.nombre}{z.planesTv ? ' · Internet + TV' : ''}</option>
+              ))}
+            </optgroup>
+          ))}
+          <option value="otra">Mi municipio no aparece</option>
+        </select>
+        <p className="zona-gate-tv"><Tv size={15} aria-hidden="true" /> Paquetes con televisión en {ZONAS_HOGAR.filter((z) => z.planesTv).map((z) => z.nombre.replace(/^.*— /, '')).join(' y ')}</p>
+        {zonaId === 'otra' && (
+          <a className="btn btn-wa btn-sm btn-block" target="_blank" rel="noopener noreferrer" href={whatsappUrl('Hola Comunícalo, mi municipio no aparece en la lista. Vivo en...', AREAS.ventasHogar.wa)}>
+            <MessageCircle size={16} /> Consultar cobertura por WhatsApp
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SelectorTv({ conTv, setConTv, tvs, setTvs }) {
+  return (
+    <div className="tv-switch">
+      <div className="tv-switch-opts" role="group" aria-label="Tipo de paquete">
+        <button type="button" className="tv-opt" aria-pressed={conTv} onClick={() => setConTv(true)}>
+          <span className="tv-opt-icon"><Tv size={22} aria-hidden="true" /></span>
+          <span><strong>Internet + TV + Teléfono</strong><span>Televisión digital con decodificador</span></span>
+          <span className="tv-opt-badge">Disponible en tu zona</span>
+        </button>
+        <button type="button" className="tv-opt" aria-pressed={!conTv} onClick={() => setConTv(false)}>
+          <span className="tv-opt-icon"><Wifi size={22} aria-hidden="true" /></span>
+          <span><strong>Internet + Teléfono</strong><span>Solo conectividad</span></span>
+        </button>
+      </div>
+      {conTv && (
+        <div className="tv-switch-tvs">
+          <span className="small">¿Cuántas televisiones?</span>
+          <div className="chips" role="group" aria-label="Número de televisores">
+            {[1, 2, 3].map((n) => (
+              <button key={n} type="button" className="chip" aria-pressed={tvs === n} onClick={() => setTvs(n)}>
+                <Tv size={14} /> {n} {n === 1 ? 'TV' : 'TVs'}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Hogar() {
-  const [tabPlanes, setTabPlanes] = useState('paqd');
+  const [zonaId, setZonaId] = useState('');
+  const [conTv, setConTv] = useState(false);
+  const [tvs, setTvs] = useState(1);
+  const { search, navigate } = useRouter();
+  const zona = ZONAS_HOGAR.find((z) => z.id === zonaId);
+  const elegirZona = (id) => {
+    setZonaId(id);
+    setConTv(!!ZONAS_HOGAR.find((z) => z.id === id)?.planesTv);
+  };
+  // "Me interesa" lleva al cotizador con el municipio y el paquete ya elegidos
+  const elegirPlan = (p) => navigate(urlCotizar('hogar', { zona: zonaId, plan: p.id }));
+
+  // ?zona=<id> preselecciona el municipio (enlaces externos o campañas)
+  useEffect(() => {
+    const id = new URLSearchParams(search).get('zona');
+    if (id && (id === 'otra' || ZONAS_HOGAR.some((z) => z.id === id))) elegirZona(id);
+  }, [search]);
+  const verTv = conTv && !!zona?.planesTv;
+  const planesZona = verTv
+    ? zona.planesTv.filter((p) => p.tvs === tvs)
+    : (zona?.planes || PLANES_HOGAR_DEFAULT);
+  // El Plan Inteligente aplica en todos los municipios: va primero en los paquetes de internet.
+  const destacadoId = planesZona[1]?.id;
+  const planes = (verTv ? planesZona : [PLAN_SOLO_INTERNET, ...planesZona]).map((p) => ({
+    ...p,
+    destacado: p.id === destacadoId,
+    badge: p.id === destacadoId ? 'Más popular' : (p.id === PLAN_SOLO_INTERNET.id ? 'El más económico' : undefined),
+  }));
+  // El precio se revela solo con un municipio de la lista; "otra" o sin elegir lo deja difuminado.
+  const precioOculto = zona ? undefined : 'zona-hogar';
 
   return (
     <>
       {/* HERO COMUNÍCALO HOGAR */}
-      <section className="page-hero">
+      <section className="page-hero page-hero--foto page-hero--alto">
+        <img src="/img/hogar-familia.webp" alt="" className="page-hero-foto" width={1600} height={567} fetchpriority="high" decoding="async" />
         <div className="container">
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', padding: '6px 14px', borderRadius: 999, marginBottom: 12 }}>
             <Wifi size={16} className="hl" />
@@ -81,7 +232,7 @@ export default function Hogar() {
               Hidalgo: Tizayuca y Tolcayuca
             </span>
             <span className="chip" style={{ background: 'rgba(255,255,255,0.12)', color: '#fff', cursor: 'default' }}>
-              Edo. Méx.: Zumpango, Coacalco, Tlalnepantla y Nopaltepec
+              Edo. Méx.: Tecámac, Zumpango, Coacalco, Tlalnepantla y Nopaltepec
             </span>
           </div>
 
@@ -95,148 +246,117 @@ export default function Hogar() {
 
       {/* SUBNAV DE SECCIONES */}
       <nav className="subnav" aria-label="Secciones de Hogar">
-        <div className="container division-nav" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <a href="#planes" className="chip">Planes PAQ D (Internet + Teléfono)</a>
-          <a href="#plan-inteligente" className="chip">Plan Inteligente ($320)</a>
-          <a href="#serie-l" className="chip">Serie L Residencial</a>
-          <a href="#villa-magna" className="chip"><Tv size={15} /> TV en Villa Magna</a>
-          <Link to="/maxvision" className="chip chip-mx" style={{ marginLeft: 'auto' }}>
-            <Tv size={15} /> ¿Vives en Otumba o Axapusco? Ver MAXVISION
-          </Link>
+        <div className="container division-nav">
+          <a href="#planes" className="chip"><Wifi size={15} /> Paquetes Internet + Teléfono</a>
+          <a href="#clientes" className="chip"><CreditCard size={15} /> Ya soy cliente</a>
         </div>
       </nav>
 
-      {/* SECCIÓN 1: PLANES PRINCIPALES PAQ D (INTERNET + TELEFONÍA) */}
-      <section className="section" id="planes">
+      {/* SECCIÓN 1: PAQUETES INTERNET + TELEFONÍA (TARIFA D o L SEGÚN FRACCIONAMIENTO) */}
+      <section className="section section--planes" id="planes">
         <div className="container">
           <SectionHead
             eyebrow="Tarifas oficiales Comunícalo · Registro IFT"
-            title="Paquetes PAQ D: Internet de Alta Velocidad + Telefonía Fija"
+            title="Paquetes de Internet de Alta Velocidad + Telefonía Fija"
           >
-            Planes prepago con recargas cada 30 días, módem WiFi incluido y 3,000 minutos a números fijos y celulares.
+            Planes prepago con recargas cada 30 días y módem WiFi incluido. El precio depende de tu municipio.
           </SectionHead>
 
-          <div className="plans plans-3">
-            {PLANES_COMUNICALO_PAQD.map((p) => (
-              <PlanCard key={p.id} plan={p} />
-            ))}
+          <div className="mb-3">
+            <SelectorZona zonaId={zonaId} onChange={elegirZona} />
           </div>
 
-          <div className="alert mt-3" style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between', background: 'var(--surface)' }}>
-            <div>
-              <strong>¿Qué incluye cada paquete PAQ D?</strong> Módem WiFi de alta potencia en comodato, telefonía fija con 3,000 min fijos nacionales, 3,000 min a celular y 500 min a EUA y Canadá. Sin plazo forzoso.
+          {zona?.planesTv && (
+            <div className="mb-3">
+              <SelectorTv conTv={conTv} setConTv={setConTv} tvs={tvs} setTvs={setTvs} />
             </div>
-            <a href="#villa-magna" className="link small">Ver disponibilidad de TV en Fracc. Villa Magna <ArrowRight size={14} /></a>
+          )}
+
+          <div className={`plans-gate${zona ? '' : ' is-locked'}`}>
+            <div className="plans-gate-content" inert={zona ? undefined : ''} aria-hidden={zona ? undefined : true}>
+              <ListaPlanes planes={planes} tv={verTv} precioOculto={precioOculto} onElegir={elegirPlan} />
+            </div>
+            {!zona && <ZonaGate zonaId={zonaId} onChange={elegirZona} />}
           </div>
-        </div>
-      </section>
 
-      {/* SECCIÓN 2: PLAN INTELIGENTE (SOLO INTERNET FIJO POR $320) */}
-      <section className="section section--alt" id="plan-inteligente">
-        <div className="container">
-          <div className="split" style={{ alignItems: 'center', gap: '2.5rem' }}>
-            <div>
-              <span className="eyebrow">Solo Internet Fijo · Sin Línea Telefónica</span>
-              <h2 className="h2 mt-1">Plan Inteligente: Conéctate por solo <span className="hl">{formatoPrecio(PLAN_SOLO_INTERNET.precio)}</span> al mes</h2>
-              <p className="lead">
-                Ideal para quienes solo necesitan navegar, hacer home office, tareas escolares o ver series sin contratar telefonía fija.
-              </p>
-              <Checklist
-                items={[
-                  `Velocidad de ${PLAN_SOLO_INTERNET.bajada} Mbps de bajada y ${PLAN_SOLO_INTERNET.subida} Mbps de subida`,
-                  'Módem WiFi en comodato incluido sin costo de renta',
-                  `Plazo mínimo de permanencia de ${PLAN_SOLO_INTERNET.permanencia} meses`,
-                  'Soporte técnico preferente en tu municipio',
-                ]}
-              />
-              <div className="btn-row mt-3">
-                <a
-                  className="btn btn-primary btn-lg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={whatsappUrl(`Hola Comunícalo, me interesa contratar el ${PLAN_SOLO_INTERNET.nombre} de ${formatoPrecio(PLAN_SOLO_INTERNET.precio)} al mes. Mi domicilio está en...`)}
-                >
-                  Contratar Plan Inteligente <ArrowRight size={18} />
-                </a>
-                <span className="small muted" style={{ alignSelf: 'center' }}>
-                  Folio IFT: {PLAN_SOLO_INTERNET.folio} · <a href={PLAN_SOLO_INTERNET.pdf} target="_blank" rel="noopener" className="link">Ficha IFT (PDF)</a>
-                </span>
-              </div>
-            </div>
-
-            <div className="card" style={{ padding: '2rem', border: '2px solid var(--accent)', position: 'relative' }}>
-              <span className="badge badge-accent badge-top">Tarifa IFT: 1244978</span>
-              <span className="icon-box"><Wifi size={24} /></span>
-              <h3 className="h3 mt-2">{PLAN_SOLO_INTERNET.nombre}</h3>
-              <div className="plan-speed mt-1">{PLAN_SOLO_INTERNET.bajada}<small> Mbps</small></div>
-              <div className="small muted">Bajada {PLAN_SOLO_INTERNET.bajada} Mbps · Subida {PLAN_SOLO_INTERNET.subida} Mbps</div>
-              <div className="plan-price mt-2">
-                <b>{formatoPrecio(PLAN_SOLO_INTERNET.precio)}</b><span>/mes</span>
-              </div>
-              <p className="small muted mt-2">
-                Conexión continua sobre infraestructura propia de Comunícalo en Hidalgo y Estado de México.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECCIÓN 3: SERIE L RESIDENCIAL */}
-      <section className="section" id="serie-l">
-        <div className="container">
-          <SectionHead
-            eyebrow="Planes Serie L · Comunícalo"
-            title="Alternativas Residenciales de Mayor Transferencia"
-          >
-            Planes registrados ante el IFT para usuarios que demandan estabilidad y capacidad sostenida.
-          </SectionHead>
-
-          <div className="plans plans-3">
-            {PLANES_COMUNICALO_L.map((p) => (
-              <PlanCard key={p.id} plan={p} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECCIÓN 4: INFORMACIÓN CRÍTICA DE TELEVISIÓN EN COMUNÍCALO (EXCLUSIVO VILLA MAGNA) */}
-      <section className="section section--alt" id="villa-magna">
-        <div className="container">
-          <div className="cta-band" style={{ background: 'linear-gradient(135deg, rgba(20,42,68,0.95), rgba(15,30,50,0.98))', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <div>
-              <span className="badge badge-accent mb-2" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                <Tv size={15} /> Aviso Oficial de Televisión Comunícalo
-              </span>
-              <h2 className="h2 mt-1">Servicio de Televisión: Exclusivo en Fraccionamiento Villa Magna</h2>
-              <p className="lead" style={{ maxWidth: 680 }}>
-                En la red de Comunícalo, el servicio de televisión por cable se ofrece <strong>de manera exclusiva para los residentes del Fraccionamiento Villa Magna en Tizayuca, Hidalgo</strong>.
-              </p>
-              <p className="small muted mt-1">
-                En el resto de los municipios de la red Comunícalo (Tolcayuca, Zumpango, Coacalco, Tlalnepantla y Nopaltepec) nos enfocamos en proveer internet de fibra óptica y telefonía fija de alta fidelidad.
-              </p>
-              <div className="btn-row mt-3">
-                <a
-                  href={whatsappUrl('Hola Comunícalo, soy vecino de Fracc. Villa Magna en Tizayuca y me interesa contratar el servicio de televisión e internet.')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-accent btn-lg"
-                >
-                  Soy de Villa Magna y quiero informes <ArrowRight size={18} />
-                </a>
-              </div>
-            </div>
-            <div style={{ flex: '1 1 360px' }}>
+          {/* Con un municipio con TV elegido se muestra la barra de canales */}
+          {zona?.planesTv && (
+            <div className="mt-3">
               <BarraCanalesVillaMagna />
             </div>
+          )}
+
+          <div className="alert mt-3" style={{ background: 'var(--surface)' }}>
+            <strong>¿Qué incluye cada paquete?</strong> Módem WiFi de alta potencia en comodato y línea telefónica fija. Prepago con recargas cada 30 días, sin plazo forzoso.
+          </div>
+
+          {/* Banner de TV: solo aplica a Villa Magna y Nopaltepec, por eso va compacto */}
+          {!zona?.planesTv && (
+            <div className="tv-banner mt-2" id="villa-magna">
+              <span className="tv-banner-icon"><Tv size={22} aria-hidden="true" /></span>
+              <p>
+                <strong>¿Vives en Fracc. Villa Magna o en Nopaltepec?</strong>{' '}
+                Agrega televisión a tu paquete para 1, 2 o 3 televisores.
+              </p>
+              <div className="tv-banner-acciones">
+                {[['tizayuca-villa-magna', 'Villa Magna'], ['nopaltepec', 'Nopaltepec']].map(([id, nombre]) => (
+                  <button
+                    key={id} type="button" className="btn btn-accent btn-sm"
+                    onClick={() => { elegirZona(id); document.getElementById('planes')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  >
+                    {nombre} <ArrowRight size={14} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CLIENTES HOGAR: CHATBOT + COMUNICADOS Y PORTAL DE PAGOS */}
+      <section className="section" id="clientes">
+        <div className="container">
+          <SectionHead eyebrow="Clientes Comunícalo Hogar" title="Tu servicio, a un mensaje o un clic" center>
+            Atiende tus pagos, dudas y trámites cuando quieras, sin filas ni llamadas en espera.
+          </SectionHead>
+          <div className="cli-grid">
+            <CarruselAvisos
+              slides={[...COMUNICADOS, ...SLIDES_CHATBOT]}
+              waNum={WHATSAPP_BOT_HOGAR}
+              etiqueta="Chatbot y comunicados para clientes"
+            />
+
+            <article className="cli-portal">
+              <img src="/img/hogar/portal-pagos.webp" alt="" className="cli-portal-img" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <div className="cli-portal-body">
+                <span className="cli-etiqueta"><ShieldCheck size={14} aria-hidden="true" /> Portal de pagos en línea</span>
+                <h3 className="h2">Paga y administra tu cuenta</h3>
+                <p>Paga con tarjeta de crédito o débito desde nuestras pasarelas seguras y lleva el control de tu servicio.</p>
+                <ul className="cli-puntos">
+                  {[
+                    'Pago con tarjeta de crédito o débito',
+                    'Consulta tu saldo e historial de pagos',
+                    'Descarga tu estado de cuenta',
+                    'Levanta aclaraciones',
+                    'Solicita devoluciones',
+                  ].map((p) => <li key={p}><CheckCircle2 size={16} aria-hidden="true" /> {p}</li>)}
+                </ul>
+                <Ext href={LINKS.pagos} className="btn btn-accent btn-lg"><CreditCard size={18} /> Pagar mi servicio</Ext>
+              </div>
+            </article>
           </div>
         </div>
       </section>
 
       {/* SECCIÓN 5: PUENTE COMERCIAL HACIA MAXVISION (OTUMBA Y AXAPUSCO) */}
-      <section className="section" id="maxvision-bridge">
+      <section className="section section--alt" id="maxvision-bridge">
         <div className="container">
-          <div className="cta-band band-mx" style={{ borderRadius: 16 }}>
+          <div className="cta-band band-mx band-foto" style={{ borderRadius: 16 }}>
+            <img src="/img/maxvision-familia.webp" alt="" className="band-foto-img" width={1024} height={372} loading="lazy" decoding="async" />
             <div>
+              <span className="mx-logo mx-logo--sm">
+                <img src="/img/logo-maxvision.webp" alt="MAXVISION" width={545} height={96} loading="lazy" decoding="async" />
+              </span>
               <span className="eyebrow" style={{ color: '#FF8FA8' }}>Marca Aliada · Estado de México</span>
               <h2 className="h2 mt-1">¿Te encuentras en Otumba o Axapusco?</h2>
               <p className="lead">
@@ -264,60 +384,49 @@ export default function Hogar() {
         </div>
       </section>
 
-      {/* SECCIÓN 6: PROCESO DE CONTRATACIÓN Y FORMULARIO */}
-      <section className="section section--alt">
-        <div className="container split">
-          <div>
-            <SectionHead eyebrow="Contratación rápida" title="Te confirmamos cobertura en tu domicilio" />
-            <Checklist
-              items={[
-                'Requisitos sencillos: Identificación oficial (INE) y comprobante de domicilio',
-                'Instalación estándar de 5 a 10 días hábiles por cuadrilla técnica propia',
-                'Opciones de pago: en línea, transferencia o sucursal autorizada',
-                'Soporte técnico cercano y atención telefónica local',
-              ]}
-            />
-            <div className="card mt-3" style={{ background: 'var(--surface)', padding: '1.25rem' }}>
-              <h4 className="h4" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <MapPin size={18} className="hl" /> Municipios con Cobertura Comunícalo
-              </h4>
-              <p className="small muted mt-1">
-                <strong>Hidalgo:</strong> Tizayuca (incluido Fracc. Villa Magna) y Tolcayuca.<br />
-                <strong>Estado de México:</strong> Zumpango, Coacalco, Tlalnepantla y Nopaltepec.
-              </p>
-              <p className="xs muted mt-2">
-                <FileText size={14} style={{ display: 'inline', verticalAlign: '-2px' }} /> Todas nuestras tarifas residenciales se encuentran debidamente registradas ante el Instituto Federal de Telecomunicaciones (IFT).
-                Consulta folios y contratos en el <Link className="link" to="/transparencia">Centro de transparencia</Link>.
-              </p>
-            </div>
-          </div>
-          <div className="card">
-            <LeadForm interesInicial="hogar" titulo="Quiero internet Comunícalo en mi casa" />
-          </div>
+      {/* SECCIÓN 6: INVITACIÓN A CONTRATAR (el formulario vive en /cotizar) */}
+      <section className="section" id="contratar">
+        <div className="container">
+          <BannerCotizar
+            para="hogar"
+            eyebrow="Contratación rápida"
+            titulo="Te confirmamos cobertura en tu domicilio"
+            texto="Elige tu paquete, déjanos tu dirección y agendamos la instalación con nuestra cuadrilla."
+            puntos={[
+              'Requisitos: INE y comprobante de domicilio',
+              'Instalación de 5 a 10 días hábiles',
+              'Módem WiFi y línea telefónica incluidos',
+              'Sin plazo forzoso',
+            ]}
+            extra={zona ? { zona: zonaId } : {}}
+          />
+          <p className="xs muted mt-2 text-center">
+            <FileText size={14} style={{ display: 'inline', verticalAlign: '-2px' }} /> Tarifas registradas ante el IFT. Consulta folios y contratos en el <Link className="link" to="/transparencia">Centro de transparencia</Link>.
+          </p>
         </div>
       </section>
 
       {/* SECCIÓN 7: PREGUNTAS FRECUENTES */}
-      <section className="section">
+      <section className="section section--alt">
         <div className="container">
           <SectionHead eyebrow="Preguntas frecuentes" title="Dudas habituales sobre el servicio para el hogar" center />
           <Faq
             items={[
               {
                 p: '¿Cuáles son las zonas con cobertura de Comunícalo Residencial?',
-                r: 'Contamos con infraestructura propia en Tizayuca y Tolcayuca (Hidalgo), así como en Zumpango, Coacalco, Tlalnepantla y Nopaltepec (Estado de México). Si vives en Otumba o Axapusco, tu servicio opera bajo nuestra marca hermana MAXVISION.'
+                r: 'Contamos con infraestructura propia en Tizayuca y Tolcayuca (Hidalgo), así como en Tecámac, Zumpango, Coacalco, Tlalnepantla y Nopaltepec (Estado de México). Si vives en Otumba o Axapusco, tu servicio opera bajo nuestra marca hermana MAXVISION.'
               },
               {
                 p: '¿En qué zonas se puede contratar servicio de televisión con Comunícalo?',
-                r: 'En la red de Comunícalo, el servicio de televisión restringida por cable se ofrece exclusivamente dentro del Fraccionamiento Villa Magna en Tizayuca, Hidalgo. Para el resto de zonas ofrecemos internet de alta velocidad y telefonía fija.'
+                r: 'En la red de Comunícalo, la televisión se ofrece en el Fraccionamiento Villa Magna (Tizayuca, Hidalgo) y en Nopaltepec (Estado de México), con paquetes para 1, 2 o 3 televisores. En el resto de zonas ofrecemos internet de alta velocidad y telefonía fija.'
               },
               {
-                p: '¿Los paquetes PAQ D tienen plazo forzoso?',
-                r: 'No. Los paquetes PAQ D y Serie L son bajo modalidad de prepago con recargas cada 30 días, lo que te da total libertad y control de tu presupuesto. El único plan con permanencia mínima de 12 meses es el Plan Inteligente ($320/mes).'
+                p: '¿Los paquetes de Internet + Teléfono tienen plazo forzoso?',
+                r: 'No. Los paquetes de Internet + Teléfono son bajo modalidad de prepago con recargas cada 30 días, lo que te da total libertad y control de tu presupuesto. El único plan con permanencia mínima de 12 meses es el Plan Inteligente ($320/mes).'
               },
               {
                 p: '¿Qué incluye la línea telefónica fija?',
-                r: 'Incluye 3,000 minutos a números fijos nacionales, 3,000 minutos a teléfonos celulares de México y 500 minutos para llamadas internacionales a Estados Unidos y Canadá.'
+                r: 'Todos los paquetes incluyen línea telefónica fija. En los paquetes PAQ D y L incluye 3,000 minutos a números fijos nacionales, 3,000 minutos a celulares de México y 500 minutos a Estados Unidos y Canadá. Los minutos de cada paquete vienen en su ficha registrada ante el IFT.'
               },
               {
                 p: '¿Cuánto tiempo tarda la instalación?',

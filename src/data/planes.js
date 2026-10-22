@@ -3,122 +3,126 @@
 import { doc } from './documentos';
 
 // ==========================================
-// 1. COMUNÍCALO - COBERTURA Y REGLAS HOGAR
+// 1. COMUNÍCALO - TARIFAS HOGAR POR MUNICIPIO
 // ==========================================
-// Cobertura Comunícalo Hogar:
-// - Hidalgo: Tizayuca y Tolcayuca.
-// - Estado de México: Zumpango, Coacalco, Tlalnepantla y Nopaltepec.
-// NOTA CRÍTICA DE NEGOCIO:
-// La televisión en Comunícalo está disponible ÚNICAMENTE en el Fraccionamiento Villa Magna (Tizayuca, Hgo).
-// En el resto de la red Comunícalo NO se comercializa televisión.
+// Fuente: Tarifas.xlsx (raíz del proyecto). Cada serie aplica en municipios específicos.
+// La TV de Comunícalo solo se ofrece en Fracc. Villa Magna (Tizayuca) y en Nopaltepec.
 
 export const COBERTURA_COMUNICALO = {
   hidalgo: ['Tizayuca', 'Tolcayuca'],
-  edomex: ['Zumpango', 'Coacalco', 'Tlalnepantla', 'Nopaltepec'],
-  tvExclusiva: 'Fraccionamiento Villa Magna (Tizayuca, Hidalgo)',
+  edomex: ['Tecámac', 'Zumpango', 'Coacalco', 'Tlalnepantla', 'Nopaltepec'],
 };
 
-// Plan de entrada: Solo Internet Fijo
+// Plan de entrada: aplica en cualquier municipio
 export const PLAN_SOLO_INTERNET = {
   id: 'plan-inteligente',
   nombre: 'Plan Inteligente',
   marca: 'Comunícalo',
-  servicio: 'Solo Internet fijo',
-  bajada: 20,
-  subida: 10,
+  servicio: 'Internet + telefonía fija',
+  bajada: 10,
   precio: 320,
   permanencia: 12,
   folio: '1244978',
   pdf: doc('tarifas/plan-inteligente.pdf'),
-  ideal: 'Navegación estable, videollamadas, streaming HD y tareas sin línea telefónica',
-  destacado: false,
+  telefonia: 'Línea telefónica fija incluida',
+  ideal: 'Navegación, redes sociales y videollamadas al mejor precio',
 };
 
-// Planes PAQ D de Comunícalo (Telefonía + Internet)
+const IDEAL = {
+  30: 'Home office, clases en línea y llamadas para el hogar',
+  50: 'Familias con múltiples dispositivos, streaming HD simultáneo',
+  100: 'Hogares hiperconectados, descargas pesadas y gaming sin lag',
+  200: 'Máxima capacidad para casas con muchos usuarios y 4K',
+};
+const MINUTOS = '3,000 min fijos nac. + 3,000 min celular + 500 min EUA/Canadá';
+const TELEFONIA = 'Línea telefónica fija incluida';
+
+const plan = (id, nombre, bajada, precio, folio, extra = {}) => ({
+  id, nombre, bajada, precio, folio: String(folio),
+  marca: 'Comunícalo',
+  servicio: 'Internet + telefonía fija',
+  telefonia: TELEFONIA,
+  ideal: IDEAL[bajada],
+  ...extra,
+});
+
+// Paquete con TV: mismo plan de internet + TV para 1, 2 o 3 televisores.
+const planTv = (base, tvs, nombre, precio, folio) =>
+  plan(`${base.id}-tv${tvs}`, nombre, base.bajada, precio, folio, {
+    servicio: 'TV + internet + telefonía fija',
+    tvs,
+    canales: base.canales,
+    pdf: base.pdfTv,
+  });
+
+// PAQ D — Tizayuca y Tecámac
 export const PLANES_COMUNICALO_PAQD = [
-  {
-    id: 'paq-d-30',
-    nombre: 'PAQ D-30',
-    marca: 'Comunícalo',
-    servicio: 'Internet + telefonía fija',
-    bajada: 30,
-    subida: 6,
-    precio: 350,
-    folio: '1457569',
-    pdf: doc('tarifas/paq-d-30.pdf'),
-    telefonia: '3,000 min fijos nac. + 3,000 min celular + 500 min EUA/Canadá',
-    ideal: 'Home office, clases en línea y llamadas ilimitadas para el hogar',
-    destacado: false,
-  },
-  {
-    id: 'paq-d-50',
-    nombre: 'PAQ D-50',
-    marca: 'Comunícalo',
-    servicio: 'Internet + telefonía fija',
-    bajada: 50,
-    subida: 10,
-    precio: 500,
-    folio: '1457585',
-    pdf: doc('tarifas/paq-d-50.pdf'),
-    telefonia: '3,000 min fijos nac. + 3,000 min celular + 500 min EUA/Canadá',
-    ideal: 'Familias con múltiples dispositivos, streaming HD simultáneo',
-    destacado: true,
-    badge: 'Más popular',
-  },
-  {
-    id: 'paq-d-100',
-    nombre: 'PAQ D-100',
-    marca: 'Comunícalo',
-    servicio: 'Internet + telefonía fija',
-    bajada: 100,
-    subida: 20,
-    precio: 800,
-    folio: '1457597',
-    pdf: doc('tarifas/paq-d-100.pdf'),
-    telefonia: '3,000 min fijos nac. + 3,000 min celular + 500 min EUA/Canadá',
-    ideal: 'Hogares hiperconectados, descargas pesadas y gaming sin lag',
-    destacado: false,
-  },
+  plan('paq-d-30', 'PAQ D-30', 30, 350, 1457569, { subida: 6, pdf: doc('tarifas/paq-d-30.pdf'), telefonia: MINUTOS }),
+  plan('paq-d-50', 'PAQ D-50', 50, 500, 1457585, { subida: 10, pdf: doc('tarifas/paq-d-50.pdf'), telefonia: MINUTOS }),
+  plan('paq-d-100', 'PAQ D-100', 100, 800, 1457597, { subida: 20, pdf: doc('tarifas/paq-d-100.pdf'), telefonia: MINUTOS }),
 ];
 
-// Serie L de Comunícalo (Planes Registrados de Alta Capacidad)
+// Serie L — Tolcayuca y Zumpango
 export const PLANES_COMUNICALO_L = [
-  {
-    id: 'l-30',
-    nombre: 'L-30',
-    marca: 'Comunícalo',
-    servicio: 'Telefonía + Internet',
-    bajada: 30,
-    subida: 6,
-    precio: 400,
-    folio: '1376655',
-    pdf: doc('tarifas/l-30.pdf'),
-    ideal: 'Conexión residencial robusta con línea fija',
-  },
-  {
-    id: 'l-50',
-    nombre: 'L-50',
-    marca: 'Comunícalo',
-    servicio: 'Telefonía + Internet',
-    bajada: 50,
-    subida: 10,
-    precio: 600,
-    folio: '1377627',
-    pdf: doc('tarifas/l-50.pdf'),
-    ideal: 'Trabajo remoto y alta transferencia de datos',
-  },
-  {
-    id: 'l-100',
-    nombre: 'L-100',
-    marca: 'Comunícalo',
-    servicio: 'Telefonía + Internet',
-    bajada: 100,
-    subida: 20,
-    precio: 900,
-    folio: '1377699',
-    pdf: doc('tarifas/l-100.pdf'),
-    ideal: 'Máxima tasa de transferencia y estabilidad total',
-  },
+  plan('l-30', 'L-30', 30, 400, 1376655, { subida: 6, pdf: doc('tarifas/l-30.pdf'), telefonia: MINUTOS }),
+  plan('l-50', 'L-50', 50, 600, 1377627, { subida: 10, pdf: doc('tarifas/l-50.pdf'), telefonia: MINUTOS }),
+  plan('l-100', 'L-100', 100, 900, 1377699, { subida: 20, pdf: doc('tarifas/l-100.pdf'), telefonia: MINUTOS }),
+];
+
+// Serie MET — Coacalco y Tlalnepantla
+export const PLANES_COMUNICALO_MET = [
+  plan('met-50', 'MET-50', 50, 400, 1559462),
+  plan('met-100', 'MET-100', 100, 600, 1559464),
+  plan('met-200', 'MET-200', 200, 900, 1559490),
+];
+
+// Nopaltepec — internet + telefonía
+export const PLANES_COMUNICALO_NOPALTEPEC = [
+  plan('agil-30', 'ÁGIL-30', 30, 350, 2231816),
+  plan('potente-50', 'POTENTE-50', 50, 500, 2231817),
+  plan('dinamico-100', 'DINÁMICO-100', 100, 800, 2231811),
+];
+
+// TV D — Fracc. Villa Magna (Tizayuca), 79 canales. Mismo folio para 1, 2 y 3 TVs.
+const [D30, D50, D100] = PLANES_COMUNICALO_PAQD.map((p) => ({ ...p, canales: 79 }));
+export const PLANES_COMUNICALO_TV_D = [
+  planTv(D30, 1, 'TV D-30', 450, 1373228), planTv(D30, 2, 'TV D-30 2 TV', 480, 1373228), planTv(D30, 3, 'TV D-30 3 TV', 500, 1373228),
+  planTv(D50, 1, 'TV D-50', 600, 1375076), planTv(D50, 2, 'TV D-50 2 TV', 630, 1375076), planTv(D50, 3, 'TV D-50 3 TV', 650, 1375076),
+  planTv(D100, 1, 'TV D-100', 900, 1375136), planTv(D100, 2, 'TV D-100 2 TV', 920, 1375136), planTv(D100, 3, 'TV D-100 3 TV', 950, 1375136),
+];
+
+// TV Nopaltepec
+const [AG, PO, DI] = PLANES_COMUNICALO_NOPALTEPEC;
+export const PLANES_COMUNICALO_TV_NOPALTEPEC = [
+  planTv(AG, 1, 'ÁGIL 30 TV1', 400, 2232431), planTv(AG, 2, 'ÁGIL 30 TV2', 450, 2232432), planTv(AG, 3, 'ÁGIL 30 TV3', 500, 2232441),
+  planTv(PO, 1, 'POTENTE 50 TV1', 550, 2232447), planTv(PO, 2, 'POTENTE 50 TV2', 600, 2232450), planTv(PO, 3, 'POTENTE 50 TV3', 650, 2232457),
+  planTv(DI, 1, 'DINÁMICO 100 TV1', 850, 2232463), planTv(DI, 2, 'DINÁMICO 100 TV2', 900, 2232468), planTv(DI, 3, 'DINÁMICO 100 TV3', 950, 2232471),
+];
+
+// Opciones del selector "¿Dónde vives?" en /hogar. Tizayuca se divide porque la TV solo llega a Villa Magna.
+export const ZONAS_HOGAR = [
+  { id: 'tizayuca-villa-magna', nombre: 'Tizayuca — Fracc. Villa Magna', estado: 'Hidalgo', planes: PLANES_COMUNICALO_PAQD, planesTv: PLANES_COMUNICALO_TV_D },
+  { id: 'tizayuca', nombre: 'Tizayuca — otras colonias', estado: 'Hidalgo', planes: PLANES_COMUNICALO_PAQD },
+  { id: 'tolcayuca', nombre: 'Tolcayuca', estado: 'Hidalgo', planes: PLANES_COMUNICALO_L },
+  { id: 'tecamac', nombre: 'Tecámac', estado: 'Estado de México', planes: PLANES_COMUNICALO_PAQD },
+  { id: 'zumpango', nombre: 'Zumpango', estado: 'Estado de México', planes: PLANES_COMUNICALO_L },
+  { id: 'coacalco', nombre: 'Coacalco de Berriozábal', estado: 'Estado de México', planes: PLANES_COMUNICALO_MET },
+  { id: 'tlalnepantla', nombre: 'Tlalnepantla de Baz', estado: 'Estado de México', planes: PLANES_COMUNICALO_MET },
+  { id: 'nopaltepec', nombre: 'Nopaltepec', estado: 'Estado de México', planes: PLANES_COMUNICALO_NOPALTEPEC, planesTv: PLANES_COMUNICALO_TV_NOPALTEPEC },
+];
+
+// Planes que se dibujan difuminados antes de elegir zona (los más vendidos).
+export const PLANES_HOGAR_DEFAULT = PLANES_COMUNICALO_PAQD;
+
+// Todas las tarifas Comunícalo Hogar (Centro de transparencia)
+export const TARIFAS_COMUNICALO_HOGAR = [
+  PLAN_SOLO_INTERNET,
+  ...PLANES_COMUNICALO_PAQD,
+  ...PLANES_COMUNICALO_L,
+  ...PLANES_COMUNICALO_MET,
+  ...PLANES_COMUNICALO_NOPALTEPEC,
+  ...PLANES_COMUNICALO_TV_D,
+  ...PLANES_COMUNICALO_TV_NOPALTEPEC,
 ];
 
 export const INCLUIDO_COMUNICALO_HOGAR = [

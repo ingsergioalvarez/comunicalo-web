@@ -7,10 +7,8 @@ import { GRUPOS_DOCUMENTOS } from '../data/documentos';
 import {
   PLANES_MAXICOM,
   PLANES_TRIPLE_PLAY,
-  PLAN_SOLO_INTERNET,
   PLAN_TV,
-  PLANES_COMUNICALO_PAQD,
-  PLANES_COMUNICALO_L,
+  TARIFAS_COMUNICALO_HOGAR,
   formatoPrecio
 } from '../data/planes';
 
@@ -43,11 +41,7 @@ export default function Transparencia() {
     { ...PLAN_TV, servicio: `Televisión restringida (${PLAN_TV.canales} canales)`, marca: 'MAXVISION' },
   ];
 
-  const tarifasComunicalo = [
-    { ...PLAN_SOLO_INTERNET, servicio: 'Internet fijo', marca: 'Comunícalo' },
-    ...PLANES_COMUNICALO_PAQD.map((p) => ({ ...p, servicio: 'Internet + telefonía fija', marca: 'Comunícalo' })),
-    ...PLANES_COMUNICALO_L.map((p) => ({ ...p, servicio: 'Telefonía + Internet', marca: 'Comunícalo' })),
-  ];
+  const tarifasComunicalo = TARIFAS_COMUNICALO_HOGAR;
 
   const todasLasTarifas = [
     ...tarifasMaxvision,
@@ -129,13 +123,15 @@ export default function Transparencia() {
                       </span>
                     </td>
                     <td>{t.servicio}</td>
-                    <td>{t.bajada ? `${t.bajada} / ${t.subida} Mbps` : 'N/A'}</td>
+                    <td>{t.bajada ? (t.subida ? `${t.bajada} / ${t.subida} Mbps` : `${t.bajada} Mbps`) : 'N/A'}</td>
                     <td><strong>{formatoPrecio(t.precio)}</strong></td>
                     <td><code>{t.folio}</code></td>
                     <td>
-                      <a className="link" href={t.pdf} target="_blank" rel="noopener">
-                        PDF
-                      </a>
+                      {t.pdf ? (
+                        <a className="link" href={t.pdf} target="_blank" rel="noopener">
+                          PDF
+                        </a>
+                      ) : '—'}
                     </td>
                   </tr>
                 ))}

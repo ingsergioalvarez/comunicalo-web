@@ -1,10 +1,13 @@
 # Para hosting Apache / cPanel. (Si usas nginx, ver deploy/nginx.conf)
-Options -MultiViews
+# El hosting actual pone nginx (HTTPS) delante de Apache: no permite "Options" (da error 500)
+# y Apache no ve %{HTTPS}, por eso se usa la cabecera X-Forwarded-Proto.
 DirectoryIndex index.html
+# Sin esto, /hogar redirige a http://.../hogar/ antes de aplicar las reglas de abajo
+DirectorySlash Off
 ErrorDocument 404 /404.html
 
 RewriteEngine On
-RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP:X-Forwarded-Proto} =http [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteRule ^ https://comunicalo.mx%{REQUEST_URI} [L,R=301]
 

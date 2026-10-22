@@ -4,3 +4,9 @@ dist
 
 # Adjuntos (PDF/audios): se suben al servidor aparte, ver README
 public/docs/
+
+# Credenciales del servidor (nunca al repositorio)
+comunicalo-config.php
+.env
+.env.*
+respaldo-imagenes-originales/

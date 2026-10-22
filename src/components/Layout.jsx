@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Phone, Menu, X, Moon, Sun, CreditCard, Gauge, MessageCircle, ChevronRight, MapPin, Clock, Mail, FileText } from 'lucide-react';
 import { Link, Ext, useRouter } from '../router';
 import { EMPRESA, TELEFONOS, LINKS, EMAIL_VENTAS, whatsappUrl } from '../data/site';
-import { PROMOCIONES } from '../data/comercial';
 import { DIVISIONES } from '../data/servicios';
 import { doc } from '../data/documentos';
 
 const NAV = [
+  { to: '/', label: 'Inicio' },
   { to: '/empresas', label: 'Empresas' },
   { to: '/hogar', label: 'Hogar' },
   { to: '/eventos', label: 'Eventos' },
@@ -15,26 +15,6 @@ const NAV = [
 ];
 
 const WA_GENERAL = whatsappUrl('Hola Comunícalo, quiero información de sus servicios.');
-
-function PromoStrip() {
-  const activas = PROMOCIONES.filter((p) => p.activo);
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (activas.length < 2) return;
-    const t = setInterval(() => setI((n) => (n + 1) % activas.length), 6000);
-    return () => clearInterval(t);
-  }, [activas.length]);
-  if (!activas.length) return null;
-  const p = activas[i];
-  return (
-    <div className="promo-strip" role="region" aria-label="Promociones">
-      <div className="container" aria-live="polite">
-        <span>{p.texto}</span>
-        <Link to={p.to}>{p.cta} →</Link>
-      </div>
-    </div>
-  );
-}
 
 function TopBar() {
   return (
@@ -203,16 +183,6 @@ function Footer() {
   );
 }
 
-function MobileBar() {
-  return (
-    <nav className="mobilebar" aria-label="Contacto rápido">
-      <a href={TELEFONOS.empresas.href}><Phone size={18} /> Llamar</a>
-      <a href={WA_GENERAL} target="_blank" rel="noopener noreferrer" className="wa"><MessageCircle size={18} /> WhatsApp</a>
-      <Link to="/cotizar" className="cta"><Zap18 /> Cotizar</Link>
-    </nav>
-  );
-}
-
 const FacebookIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.9-4.5 4.7V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V8.9c0-.6.4-.9 1-.9z" /></svg>
 );
@@ -229,12 +199,10 @@ export default function Layout({ children }) {
   return (
     <>
       <a href="#contenido" className="skip">Saltar al contenido</a>
-      <PromoStrip />
       <TopBar />
       <Header />
       <main id="contenido">{children}</main>
       <Footer />
-      <MobileBar />
       <a href={WA_GENERAL} target="_blank" rel="noopener noreferrer" className="wa-float" aria-label="Escríbenos por WhatsApp">
         <MessageCircle size={28} />
       </a>

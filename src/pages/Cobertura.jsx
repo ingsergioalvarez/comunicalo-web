@@ -1,86 +1,106 @@
-import React, { useMemo, useState } from 'react';
-import { Search, MapPin, ArrowRight, Factory, Home } from 'lucide-react';
-import { SectionHead, LeadForm } from '../components/ui';
-import { whatsappUrl } from '../data/site';
-import { COBERTURA } from '../data/comercial';
+import React from 'react';
+import { Activity, Globe } from 'lucide-react';
+import { SectionHead, CtaBand } from '../components/ui';
+import MapaCobertura from '../components/MapaCobertura';
 
-const sinAcentos = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const PASOS_FACTIBILIDAD = [
+  { titulo: 'Nos compartes tu ubicación', texto: 'Envíanos las coordenadas, el enlace de Google Maps o la dirección del sitio que quieres conectar.' },
+  { titulo: 'Validamos la solución idónea', texto: 'Revisamos qué llega a ese punto: red propia, cobertura extendida, interconexión con carriers, LTE o satelital.' },
+  { titulo: 'Trabajo consultivo', texto: 'Un ingeniero entiende tu operación (usuarios, aplicaciones, respaldo) para dimensionar el servicio correcto.' },
+  { titulo: 'Propuesta a tu medida', texto: 'Recibes una propuesta formal por escrito y, en proyectos especiales, agendamos visita técnica.' },
+];
 
 export default function Cobertura() {
-  const [q, setQ] = useState('');
-  const [region, setRegion] = useState('todas');
-
-  const zonas = useMemo(() => {
-    const n = sinAcentos(q.trim());
-    return COBERTURA.flatMap((r) => r.zonas.map((z) => ({ zona: z, region: r.region })))
-      .filter((x) => (region === 'todas' || x.region === region) && (!n || sinAcentos(`${x.zona} ${x.region}`).includes(n)));
-  }, [q, region]);
-
-  const consultar = (zona) =>
-    window.open(whatsappUrl(`Hola Comunícalo, quiero validar cobertura en: ${zona}. ¿Tienen servicio?`), '_blank', 'noopener');
-
   return (
     <>
-      <section className="page-hero">
+      {/* HERO DE COBERTURA NACIONAL */}
+      <section className="page-hero page-hero--foto page-hero--alto hero-cobertura">
+        <img
+          src="/img/hero-cobertura.webp"
+          alt="Infraestructura de telecomunicaciones en México: racks de fibra óptica, NOC y torres de microondas"
+          className="page-hero-foto"
+          width={1600}
+          height={900}
+          fetchpriority="high"
+          decoding="async"
+        />
         <div className="container">
-          <span className="eyebrow">Cobertura</span>
-          <h1 className="h1 mt-1">¿Hay Comunícalo en tu zona?</h1>
-          <p className="lead">Busca tu municipio o colonia. Si no aparece, escríbenos: validamos factibilidad en tu domicilio exacto y, si es necesario, hacemos una visita técnica.</p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="card mb-3">
-            <form className="form" onSubmit={(e) => { e.preventDefault(); consultar(q || 'mi domicilio'); }}>
-              <div className="search">
-                <Search size={18} aria-hidden="true" />
-                <label htmlFor="cob-q" className="sr-only">Municipio o colonia</label>
-                <input id="cob-q" className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ej. Tlalnepantla, Tizayuca, Vallejo…" />
-              </div>
-              <div className="chips">
-                {['todas', ...COBERTURA.map((r) => r.region)].map((r) => (
-                  <button type="button" key={r} className="chip" aria-pressed={region === r} onClick={() => setRegion(r)}>
-                    {r === 'todas' ? 'Todas' : r}
-                  </button>
-                ))}
-              </div>
-              <button className="btn btn-primary btn-lg" type="submit">Validar mi domicilio por WhatsApp <ArrowRight size={18} /></button>
-            </form>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', padding: '6px 14px', borderRadius: 999, marginBottom: 12 }}>
+            <Globe size={16} className="hl" />
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              Red Carrier Nacional · Concesión Federal Única · 32 Estados
+            </span>
           </div>
-
-          <p className="small muted mb-2" aria-live="polite">
-            {zonas.length ? `${zonas.length} zona(s) con presencia de red. Toca una para confirmar tu domicilio.` : 'No encontramos esa zona en la lista, pero podemos validarla: envíanos tu domicilio.'}
+          <h1 className="h1 mt-1">Cobertura Nacional 100%: Fibra Óptica, Microondas, Satelital y LTE</h1>
+          <p className="lead">
+            Operamos <strong>red propia de alta capacidad</strong> en la Zona Centro (Morelos, Estado de México, Ciudad de México, Puebla, Hidalgo y Tlaxcala) con fibra directa y microondas. Y llegamos a <strong>cada rincón de los 32 estados de la República Mexicana</strong> mediante nuestra <strong>cobertura extendida</strong>, interconexiones con carriers, conectividad LTE y enlaces satelitales.
           </p>
-          <div className="grid grid-3">
-            {zonas.map((x) => (
-              <button key={x.zona} className="zone" onClick={() => consultar(`${x.zona}, ${x.region}`)}>
-                <span><strong>{x.zona}</strong><small>{x.region}</small></span>
-                <MapPin size={18} className="hl" aria-hidden="true" />
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
-      <section className="section section--alt">
-        <div className="container split" style={{ alignItems: 'start' }}>
-          <div>
-            <SectionHead eyebrow="Factibilidad" title="Cómo validamos tu cobertura" />
-            <div className="grid">
-              <div className="card" style={{ display: 'flex', gap: 14 }}>
-                <span className="icon-box"><Home size={22} /></span>
-                <div><h3 className="h3">Hogares y fraccionamientos</h3><p className="small muted mt-1">Revisamos si tu calle o privada ya está conectada a nuestra red y te damos fecha de instalación.</p></div>
+      {/* SECCIÓN DEL MAPA DE COBERTURA 3D ESTILO NEÓN */}
+      <section className="section" id="mapa-red">
+        <div className="container">
+          <div className="mapa-cyber-section">
+            <div className="mapa-cyber-header">
+              <span className="mapa-cyber-badge">
+                <Activity size={15} /> Topología Nacional Multi-Tecnología · 32 Estados Conectados
+              </span>
+              <h2 className="h2" style={{ color: '#fff', textShadow: '0 0 20px rgba(56, 189, 248, 0.4)' }}>
+                Red propia, cobertura extendida y cobertura nacional
+              </h2>
+              <p className="lead" style={{ color: '#C9D8EA' }}>
+                Mapa de infraestructura en los 32 estados de México: 6 estados centrales con <strong>Red Propia</strong> directa de fibra y microondas, <strong>cobertura extendida</strong> de fibra y microondas en 19 estados, interconexión con carriers donde no llegamos directo, y LTE y satelital en todo el país.
+              </p>
+            </div>
+
+            {/* MÉTRICAS DE LA RED */}
+            <div className="mapa-metrics-grid">
+              <div className="mapa-metric-card">
+                <div className="mapa-metric-val">32 / 32</div>
+                <div className="mapa-metric-lbl">Estados con cobertura nacional activa</div>
               </div>
-              <div className="card" style={{ display: 'flex', gap: 14 }}>
-                <span className="icon-box"><Factory size={22} /></span>
-                <div><h3 className="h3">Empresas y parques industriales</h3><p className="small muted mt-1">Si no hay fibra cercana, evaluamos un enlace por microondas. Hacemos visita técnica sin costo para proyectos empresariales.</p></div>
+              <div className="mapa-metric-card">
+                <div className="mapa-metric-val">4 Tecnologías</div>
+                <div className="mapa-metric-lbl">Fibra Óptica · Microondas · Satelital · LTE</div>
+              </div>
+              <div className="mapa-metric-card">
+                <div className="mapa-metric-val">6 Estados</div>
+                <div className="mapa-metric-lbl">Red Propia directa (CDMX, Edomex, Hgo, Pue, Mor, Tlax)</div>
+              </div>
+              <div className="mapa-metric-card">
+                <div className="mapa-metric-val">99.95%</div>
+                <div className="mapa-metric-lbl">SLA de disponibilidad garantizado NOC 24/7</div>
               </div>
             </div>
+
+            <MapaCobertura />
+
           </div>
-          <div className="card">
-            <LeadForm interesInicial="hogar" titulo="Valida tu domicilio" subtitulo="Escribe tu colonia y municipio para revisar la factibilidad." />
-          </div>
+        </div>
+      </section>
+
+
+      {/* CÓMO VALIDAMOS TU FACTIBILIDAD (el formulario vive en /cotizar) */}
+      <section className="section">
+        <div className="container">
+          <SectionHead eyebrow="Proceso de factibilidad" title="¿Cómo validamos tu factibilidad técnica?" center>
+            No te vendemos un paquete genérico: hacemos un trabajo consultivo para ofrecerte la mejor solución posible en tu ubicación.
+          </SectionHead>
+          <ol className="steps">
+            {PASOS_FACTIBILIDAD.map((p) => (
+              <li key={p.titulo} className="step">
+                <h3 className="h3">{p.titulo}</h3>
+                <p className="small muted mt-1">{p.texto}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="section section--tight">
+        <div className="container">
+          <CtaBand title="Valida la factibilidad en tu ubicación" text="Compártenos tu dirección o coordenadas y un ingeniero te propone la solución idónea, sin costo." />
         </div>
       </section>
     </>

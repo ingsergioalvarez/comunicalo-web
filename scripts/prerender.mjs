@@ -9,7 +9,7 @@ const dist = path.join(raiz, 'dist');
 const ssrDir = path.join(raiz, '.ssr');
 const SITE = 'https://comunicalo.mx';
 
-const { render, RUTAS_PRERENDER, ROUTES } = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
+const { render, RUTAS_PRERENDER, ROUTES, TITULO_PESTANA } = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 const plantilla = fs.readFileSync(path.join(dist, 'index.html'), 'utf-8');
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -26,10 +26,10 @@ const jsonLd = {
   telephone: '+52-55-2601-4888',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Convento de Churubusco #4, Col. Jardines de Santa Mónica',
-    addressLocality: 'Tlalnepantla de Baz',
+    streetAddress: 'Circuito Poetas 7, Cd. Satélite',
+    addressLocality: 'Naucalpan de Juárez',
     addressRegion: 'Estado de México',
-    postalCode: '54050',
+    postalCode: '53100',
     addressCountry: 'MX',
   },
   openingHours: 'Mo-Fr 09:00-18:00',
@@ -40,7 +40,7 @@ const jsonLd = {
 function pagina(ruta, meta, html) {
   const canonical = `${SITE}${ruta === '/' ? '/' : ruta}`;
   let out = plantilla
-    .replace(/<title>[^<]*<\/title>/, `<title>${esc(meta.title)}</title>`)
+    .replace(/<title>[^<]*<\/title>/, `<title>${esc(TITULO_PESTANA)}</title>`)
     .replace(/(<meta name="description" content=")[^"]*"/, `$1${esc(meta.description)}"`)
     .replace(/(<meta property="og:title" content=")[^"]*"/, `$1${esc(meta.title)}"`)
     .replace(/(<meta property="og:description" content=")[^"]*"/, `$1${esc(meta.description)}"`)

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Router, useRouter } from './router';
-import { ROUTES, NOT_FOUND, rutaLegada } from './routes';
+import { ROUTES, NOT_FOUND, TITULO_PESTANA, rutaLegada } from './routes';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Empresas from './pages/Empresas';
@@ -43,7 +43,7 @@ function Paginas() {
   const meta = ROUTES[path] || NOT_FOUND;
 
   useEffect(() => {
-    document.title = meta.title;
+    document.title = TITULO_PESTANA;
     setMeta('meta[name="description"]', 'content', meta.description);
     setMeta('meta[property="og:title"]', 'content', meta.title);
     setMeta('meta[property="og:description"]', 'content', meta.description);
