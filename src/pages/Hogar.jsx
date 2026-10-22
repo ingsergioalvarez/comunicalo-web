@@ -16,6 +16,7 @@ import {
   formatoPrecio
 } from '../data/planes';
 import { FAQ_GENERAL } from '../data/comercial';
+import { imgResp } from '../imagenes';
 
 function BarraCanalesVillaMagna() {
   const categorias = Object.keys(BARRA_CANALES);
@@ -208,7 +209,7 @@ export default function Hogar() {
     <>
       {/* HERO COMUNÍCALO HOGAR */}
       <section className="page-hero page-hero--foto page-hero--alto">
-        <img src="/img/hogar-familia.webp" alt="" className="page-hero-foto" width={1600} height={567} fetchpriority="high" decoding="async" />
+        <img {...imgResp('/img/hogar-familia.webp', 'portada')} alt="" className="page-hero-foto" width={1600} height={567} fetchpriority="high" decoding="async" />
         <div className="container">
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', padding: '6px 14px', borderRadius: 999, marginBottom: 12 }}>
             <Wifi size={16} className="hl" />
@@ -243,14 +244,6 @@ export default function Hogar() {
           </div>
         </div>
       </section>
-
-      {/* SUBNAV DE SECCIONES */}
-      <nav className="subnav" aria-label="Secciones de Hogar">
-        <div className="container division-nav">
-          <a href="#planes" className="chip"><Wifi size={15} /> Paquetes Internet + Teléfono</a>
-          <a href="#clientes" className="chip"><CreditCard size={15} /> Ya soy cliente</a>
-        </div>
-      </nav>
 
       {/* SECCIÓN 1: PAQUETES INTERNET + TELEFONÍA (TARIFA D o L SEGÚN FRACCIONAMIENTO) */}
       <section className="section section--planes" id="planes">
@@ -327,7 +320,7 @@ export default function Hogar() {
             />
 
             <article className="cli-portal">
-              <img src="/img/hogar/portal-pagos.webp" alt="" className="cli-portal-img" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <img {...imgResp('/img/hogar/portal-pagos.webp', 'contenido')} alt="" className="cli-portal-img" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               <div className="cli-portal-body">
                 <span className="cli-etiqueta"><ShieldCheck size={14} aria-hidden="true" /> Portal de pagos en línea</span>
                 <h3 className="h2">Paga y administra tu cuenta</h3>
@@ -352,7 +345,7 @@ export default function Hogar() {
       <section className="section section--alt" id="maxvision-bridge">
         <div className="container">
           <div className="cta-band band-mx band-foto" style={{ borderRadius: 16 }}>
-            <img src="/img/maxvision-familia.webp" alt="" className="band-foto-img" width={1024} height={372} loading="lazy" decoding="async" />
+            <img {...imgResp('/img/maxvision-familia.webp', 'contenido')} alt="" className="band-foto-img" width={1024} height={372} loading="lazy" decoding="async" />
             <div>
               <span className="mx-logo mx-logo--sm">
                 <img src="/img/logo-maxvision.webp" alt="MAXVISION" width={545} height={96} loading="lazy" decoding="async" />

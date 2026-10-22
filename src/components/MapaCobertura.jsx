@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { MapPin, Satellite, Layers, Search, ArrowRight, Pause, Play } from 'lucide-react';
 import { NIVELES, CAPA_LTE, MAPA_BASE, ESTADOS } from '../data/cobertura';
 import { Link } from '../router';
+import { imgResp } from '../imagenes';
 
 // Vistas del mapa: "todas" apila las tres capas de estado (mix-blend: lighten)
 const VISTAS = [
@@ -10,6 +11,8 @@ const VISTAS = [
   { id: 'lte', label: CAPA_LTE.nombre, color: CAPA_LTE.color },
 ];
 const RECORRIDO = ['propia', 'extendida', 'interconexion', 'lte', 'todas'];
+
+const capasDe = (vista) => (vista === 'todas' ? Object.keys(NIVELES) : [vista]);
 
 function contar(id) {
   if (id === 'todas' || id === 'lte') return ESTADOS.length;
@@ -30,6 +33,14 @@ export default function MapaCobertura() {
     }, 3200);
     return () => clearInterval(t);
   }, [auto]);
+
+  // Capas descargadas: las de la vista actual y, durante el recorrido, las de la siguiente
+  const [pedidas, setPedidas] = useState(() => capasDe('todas'));
+  useEffect(() => {
+    const siguiente = auto ? RECORRIDO[(RECORRIDO.indexOf(vista) + 1) % RECORRIDO.length] : null;
+    const nuevas = [...capasDe(vista), ...(siguiente ? capasDe(siguiente) : [])];
+    setPedidas((p) => (nuevas.every((id) => p.includes(id)) ? p : [...new Set([...p, ...nuevas])]));
+  }, [vista, auto]);
 
   const elegirVista = (id) => { setAuto(false); setVista(id); setEstado(null); };
   const elegirEstado = (nombre) => {
@@ -70,11 +81,13 @@ export default function MapaCobertura() {
 
       <div className="cobmap-grid">
         <div className="cobmap-stage">
-          <img src={MAPA_BASE} alt="" className="cobmap-img" width={1600} height={1195} />
-          {Object.entries(NIVELES).map(([id, n]) => (
-            <img key={id} src={n.img} alt="" className={`cobmap-img cobmap-capa${visibles(id) ? ' is-on' : ''}`} width={1600} height={1195} loading="lazy" />
+          <img {...imgResp(MAPA_BASE, 'mapa')} alt="" className="cobmap-img" width={1600} height={1195} />
+          {Object.entries(NIVELES).map(([id, n]) => pedidas.includes(id) && (
+            <img key={id} {...imgResp(n.img, 'mapa')} alt="" className={`cobmap-img cobmap-capa${visibles(id) ? ' is-on' : ''}`} width={1600} height={1195} loading="lazy" />
           ))}
-          <img src={CAPA_LTE.img} alt="" className={`cobmap-img cobmap-capa cobmap-capa--lte${visibles('lte') ? ' is-on' : ''}`} width={1600} height={1195} loading="lazy" />
+          {pedidas.includes('lte') && (
+            <img {...imgResp(CAPA_LTE.img, 'mapa')} alt="" className={`cobmap-img cobmap-capa cobmap-capa--lte${visibles('lte') ? ' is-on' : ''}`} width={1600} height={1195} loading="lazy" />
+          )}
           <ul className="cobmap-leyenda" aria-hidden="true">
             {Object.values(NIVELES).map((n) => (
               <li key={n.nombre}><span style={{ background: n.color }} /> {n.nombre}</li>

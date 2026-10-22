@@ -6,6 +6,7 @@ import Coverflow from '../components/Coverflow';
 import { BannerCotizar, urlCotizar } from '../components/Cotiza';
 import { TELEFONOS, AREAS, whatsappUrl } from '../data/site';
 import { TIPOS_EVENTO as TIPOS } from '../data/eventos';
+import { imgResp } from '../imagenes';
 
 const CIFRAS_EVENTOS = [
   { v: '+10 años', l: 'conectando eventos empresariales, sociales y masivos' },
@@ -19,7 +20,7 @@ function IlustracionEvento({ x }) {
   if (x.imagen && !fallo) {
     return (
       <figure className="svc-media">
-        <img src={x.imagen.src} alt={x.imagen.alt} loading="lazy" decoding="async" onError={() => setFallo(true)} />
+        <img {...imgResp(x.imagen.src, 'servicio')} alt={x.imagen.alt} loading="lazy" decoding="async" onError={() => setFallo(true)} />
       </figure>
     );
   }
@@ -79,7 +80,7 @@ export default function Eventos() {
   return (
     <>
       <section className="page-hero page-hero--foto page-hero--alto">
-        <img src="/img/eventos/conciertos.webp" alt="" className="page-hero-foto" width={1200} height={675} fetchpriority="high" decoding="async" />
+        <img {...imgResp('/img/eventos/conciertos.webp', 'portada')} alt="" className="page-hero-foto" width={1200} height={675} fetchpriority="high" decoding="async" />
         <div className="container">
           <span className="eyebrow">Internet para eventos</span>
           <h1 className="h1 mt-1">Que tu evento no dependa del WiFi del recinto</h1>

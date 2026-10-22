@@ -16,5 +16,6 @@ return [
   'correo_por_area'  => [
     'ventasEmpresas' => ['comercialempresarial@comunicalo.mx'],
     'ventasHogar'    => ['ventas@comunicalo.mx'], // PENDIENTE: correo de ventas Hogar
+    'ventasMaxvision' => ['ventas@comunicalo.mx'], // PENDIENTE: correo de MAXVISION
   ],
 ];

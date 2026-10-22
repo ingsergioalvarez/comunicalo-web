@@ -5,6 +5,7 @@ import Icon from './Icon';
 import Coverflow from './Coverflow';
 import { Checklist } from './ui';
 import { whatsappUrl, AREAS } from '../data/site';
+import { imgResp } from '../imagenes';
 
 // Servicios empresariales en carrusel coverflow (enlaces /empresas#<id-servicio>).
 
@@ -13,7 +14,7 @@ function MediaServicio({ s }) {
   if (s.imagen?.src && !fallo) {
     return (
       <figure className="svc-media">
-        <img src={s.imagen.src} alt={s.imagen.alt} loading="lazy" decoding="async" onError={() => setFallo(true)} />
+        <img {...imgResp(s.imagen.src, 'servicio')} alt={s.imagen.alt} loading="lazy" decoding="async" onError={() => setFallo(true)} />
       </figure>
     );
   }

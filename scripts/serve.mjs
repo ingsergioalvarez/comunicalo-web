@@ -1,15 +1,19 @@
 // Servidor estático para revisar /dist igual que en producción (nginx/Apache):
 // archivo → ruta/index.html → 404.html. Uso: npm run preview  (PORT=4280 por defecto)
+// npm run preview:red lo comparte en la red local para que otros lo prueben.
 import http from 'node:http';
+import os from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const port = Number(process.env.PORT) || 4280;
+// --red: acepta conexiones de otros equipos de la red local (npm run preview:red)
+const red = process.argv.includes('--red');
 const TIPOS = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml',
-  '.png': 'image/png', '.pdf': 'application/pdf', '.mp3': 'audio/mpeg', '.xml': 'application/xml', '.txt': 'text/plain',
+  '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.json': 'application/json', '.pdf': 'application/pdf', '.mp3': 'audio/mpeg', '.xml': 'application/xml', '.txt': 'text/plain',
 };
 
 function resolver(urlPath) {
@@ -35,4 +39,11 @@ http.createServer((req, res) => {
   }
   res.writeHead(archivo ? 200 : 404, { 'Content-Type': tipo, 'Content-Length': tamano, 'Accept-Ranges': 'bytes' });
   fs.createReadStream(destino).pipe(res);
-}).listen(port, '127.0.0.1', () => console.log(`Sitio en http://127.0.0.1:${port}`));
+}).listen(port, red ? '0.0.0.0' : '127.0.0.1', () => {
+  console.log(`Sitio en http://127.0.0.1:${port}`);
+  if (!red) return;
+  // Direcciones para abrirlo desde otros equipos de la misma red (celulares, laptops)
+  for (const lista of Object.values(os.networkInterfaces())) {
+    for (const i of lista) if (i.family === 'IPv4' && !i.internal) console.log(`En tu red:  http://${i.address}:${port}`);
+  }
+});

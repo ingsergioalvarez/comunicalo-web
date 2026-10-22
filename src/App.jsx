@@ -2,28 +2,8 @@ import React, { useEffect } from 'react';
 import { Router, useRouter } from './router';
 import { ROUTES, NOT_FOUND, TITULO_PESTANA, rutaLegada } from './routes';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import Empresas from './pages/Empresas';
-import Hogar from './pages/Hogar';
-import Eventos from './pages/Eventos';
-import Maxvision from './pages/Maxvision';
-import Cobertura from './pages/Cobertura';
-import Cotizar from './pages/Cotizar';
-import Transparencia from './pages/Transparencia';
-import Contacto from './pages/Contacto';
 import NotFound from './pages/NotFound';
-
-const PAGINAS = {
-  '/': Home,
-  '/empresas': Empresas,
-  '/hogar': Hogar,
-  '/eventos': Eventos,
-  '/maxvision': Maxvision,
-  '/cobertura': Cobertura,
-  '/cotizar': Cotizar,
-  '/transparencia': Transparencia,
-  '/contacto': Contacto,
-};
+import { PAGINAS, paginaCargada, cargarPagina } from './paginas';
 
 function setMeta(selector, attr, value) {
   const el = document.head.querySelector(selector);
@@ -39,7 +19,7 @@ function Paginas() {
     if (destino) navigate(destino, { replace: true });
   }, [navigate]);
 
-  const Pagina = PAGINAS[path] || NotFound;
+  const Pagina = paginaCargada(path) || NotFound;
   const meta = ROUTES[path] || NOT_FOUND;
 
   useEffect(() => {
@@ -56,7 +36,7 @@ function Paginas() {
 
 export default function App({ initialPath = '/', initialSearch = '' }) {
   return (
-    <Router initialPath={initialPath} initialSearch={initialSearch}>
+    <Router initialPath={initialPath} initialSearch={initialSearch} precargar={cargarPagina}>
       <Layout>
         <Paginas />
       </Layout>

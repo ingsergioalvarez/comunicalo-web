@@ -8,6 +8,7 @@ import { SectionHead, Faq, CtaBand } from '../components/ui';
 import { CotizaHero } from '../components/Cotiza';
 import { TELEFONOS } from '../data/site';
 import { PASOS_CONTRATACION, FAQ_GENERAL } from '../data/comercial';
+import { imgResp } from '../imagenes';
 
 const SEGMENTOS = {
   empresa: {
@@ -70,7 +71,7 @@ const FORTALEZAS = [
 function TileSolucion({ x, tab, eager }) {
   return (
     <Link to={x.to} tabIndex={tab} className={`sol-tile${x.tam ? ` sol-tile--${x.tam}` : ''}`}>
-      <img src={x.img} alt="" className="sol-tile-img" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+      <img {...imgResp(x.img, x.tam === 'xl' ? 'tarjetaXl' : x.tam === 'wide' ? 'tarjetaAncha' : 'tarjeta')} alt="" className="sol-tile-img" loading={eager ? 'eager' : 'lazy'} decoding="async" />
       <span className="sol-tile-tag">{x.tag}</span>
       <div className="sol-tile-body">
         <span className="sol-tile-icon"><Icon name={x.icon} size={20} /></span>
@@ -97,6 +98,9 @@ function TarjetaInfra({ f }) {
 
 export default function Home() {
   const [seg, setSeg] = useState('empresa');
+  // Fondos ya pedidos: los de las otras pestañas se descargan hasta que el usuario las apunta o elige
+  const [fondos, setFondos] = useState({ empresa: true });
+  const pedirFondo = (id) => setFondos((f) => (f[id] ? f : { ...f, [id]: true }));
   const esMovil = useEsMovil();
 
   return (
@@ -104,13 +108,13 @@ export default function Home() {
       <section className="hero">
         {/* Fondo de cada pestaña: se cruzan con un desvanecido al cambiar */}
         {Object.entries(SEGMENTOS).map(([id, v]) => (
-          <img key={id} src={v.fondo} alt="" className={`hero-fondo${seg === id ? ' is-activo' : ''}`} decoding="async" fetchpriority={id === 'empresa' ? 'high' : undefined} loading={id === 'empresa' ? 'eager' : 'lazy'} />
+          fondos[id] && <img key={id} {...imgResp(v.fondo, 'portada')} alt="" className={`hero-fondo${seg === id ? ' is-activo' : ''}`} decoding="async" fetchpriority={id === 'empresa' ? 'high' : undefined} />
         ))}
         <div className="container">
           <div>
             <div className="seg-tabs" role="tablist" aria-label="¿Para quién es?">
               {Object.entries(SEGMENTOS).map(([id, v]) => (
-                <button key={id} role="tab" aria-selected={seg === id} onClick={() => setSeg(id)}>
+                <button key={id} role="tab" aria-selected={seg === id} onClick={() => { pedirFondo(id); setSeg(id); }} onMouseEnter={() => pedirFondo(id)} onFocus={() => pedirFondo(id)} onTouchStart={() => pedirFondo(id)}>
                   <v.icon size={16} aria-hidden="true" /> {v.tab}
                 </button>
               ))}
@@ -244,7 +248,7 @@ export default function Home() {
       <section className="section">
         <div className="container">
           <div className="cob-banner">
-            <img src="/img/mapa-cobertura-azul.webp" alt="" className="cob-banner-mapa" loading="lazy" />
+            <img {...imgResp('/img/mapa-cobertura-azul.webp', 'contenido')} alt="" className="cob-banner-mapa" loading="lazy" />
             <div className="cob-banner-body">
               <span className="cob-banner-eyebrow"><MapPin size={15} /> Cobertura</span>
               <h2 className="h2 mt-1">¿Ya llega Comunícalo a tu domicilio?</h2>

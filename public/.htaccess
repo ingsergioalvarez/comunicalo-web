@@ -29,9 +29,43 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}/index.html -f
 RewriteRule ^(.*?)/?$ /$1/index.html [L]
 
+# Tipos que Apache podría no conocer (si no, se sirven sin tipo y no se comprimen/cachean)
+AddType image/webp .webp
+AddType font/woff2 .woff2
+AddType text/javascript .js .mjs
+
+# Compresión gzip de texto (HTML, CSS, JS, JSON, SVG, XML). Imágenes, fuentes woff2, PDF y MP3 ya vienen comprimidos.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml text/javascript application/javascript application/x-javascript application/json application/xml application/ld+json image/svg+xml image/x-icon
+</IfModule>
+
+# Caché en el navegador
+# - /assets: nombres con hash (cambian en cada build) → 1 año, inmutables
+# - imágenes y fuentes de /img: 30 días (si se reemplaza una con el mismo nombre, tarda hasta 30 días en verse; mejor cambiarle el nombre)
+# - HTML: siempre se revalida, para que los cambios del sitio se vean de inmediato
 <IfModule mod_expires.c>
   ExpiresActive On
+  ExpiresDefault "access plus 1 day"
+  ExpiresByType text/html "access plus 0 seconds"
   ExpiresByType text/css "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+  ExpiresByType image/vnd.microsoft.icon "access plus 30 days"
   ExpiresByType application/pdf "access plus 30 days"
+  ExpiresByType audio/mpeg "access plus 30 days"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  # Las respuestas comprimidas varían según lo que acepte el navegador
+  Header append Vary Accept-Encoding
 </IfModule>

@@ -8,6 +8,14 @@ export default defineConfig(({ isSsrBuild }) => ({
     target: 'es2019',
     // Los documentos (PDF/MP3) de /public solo se copian en el build del cliente
     copyPublicDir: !isSsrBuild,
+    // El prerender lo usa para precargar el JS de cada página; se borra al terminar
+    manifest: !isSsrBuild,
+    rollupOptions: isSsrBuild ? {} : {
+      output: {
+        // Todos los iconos en un solo archivo, en lugar de un archivo pequeño por icono
+        manualChunks: (id) => (id.includes('lucide-react') ? 'iconos' : undefined),
+      },
+    },
   },
   ssr: {
     noExternal: ['lucide-react'],

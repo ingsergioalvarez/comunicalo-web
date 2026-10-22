@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, MessageCircle, ArrowUpRight, CircleCheck, Pause, Play } from 'lucide-react';
 import { Ext } from '../router';
 import { whatsappUrl } from '../data/site';
+import { imgResp } from '../imagenes';
 
 // Carrusel con desvanecido que avanza solo cada `intervalo` ms. Se pausa al pasar
 // el mouse, al enfocar con teclado, con el botón de pausa o si el usuario prefiere
@@ -17,7 +18,7 @@ function Slide({ s, activo, waNum }) {
       aria-roledescription="diapositiva"
     >
       {s.imagen && !sinImagen && (
-        <img src={s.imagen} alt="" className="cli-slide-img" loading="lazy" decoding="async" onError={() => setSinImagen(true)} />
+        <img {...imgResp(s.imagen, 'contenido')} alt="" className="cli-slide-img" loading="lazy" decoding="async" onError={() => setSinImagen(true)} />
       )}
       <div className="cli-slide-body">
         <span className="cli-etiqueta">{s.etiqueta}</span>

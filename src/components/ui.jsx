@@ -4,6 +4,7 @@ import { Link } from '../router';
 import { whatsappUrl, mailtoUrl, registrarLead, areaDeInteres, AREAS, TELEFONOS } from '../data/site';
 import { formatoPrecio, INCLUIDO_HOGAR } from '../data/planes';
 import { PlanIcon, PlanFeature } from './PlanIcons';
+import { imgResp } from '../imagenes';
 
 export const OPCIONES_INTERES = [
   { id: 'hogar', label: 'Internet para mi casa' },
@@ -14,7 +15,6 @@ export const OPCIONES_INTERES = [
   { id: 'lan-to-lan', label: 'Enlaces entre sucursales / VPN' },
   { id: 'cctv', label: 'Cámaras y monitoreo C2' },
   { id: 'ciberseguridad', label: 'Ciberseguridad / data center' },
-  { id: 'maxvision', label: 'MAXVISION TV' },
   { id: 'otro', label: 'Otro' },
 ];
 
@@ -22,7 +22,7 @@ export const OPCIONES_INTERES = [
 export function Foto({ src, alt, width, height, ilustrativa = true, prioridad = false, className = '' }) {
   return (
     <figure className={`foto ${className}`}>
-      <img src={src} alt={alt} width={width} height={height} loading={prioridad ? 'eager' : 'lazy'} decoding="async" />
+      <img {...imgResp(src, 'contenido')} alt={alt} width={width} height={height} loading={prioridad ? 'eager' : 'lazy'} decoding="async" />
       {ilustrativa && <figcaption>Imagen ilustrativa</figcaption>}
     </figure>
   );
@@ -195,7 +195,7 @@ export function PlanCard({ plan, tv, precioOculto, onElegir }) {
           </div>
         </div>
         <img
-          src={deviceImg}
+          {...imgResp(deviceImg, 'equipo')}
           alt={tv ? 'Decodificador Digital 4K' : 'Módem WiFi 6 Gigabit'}
           className="plan-header-device"
           loading="lazy"

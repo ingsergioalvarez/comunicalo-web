@@ -8,8 +8,25 @@ import { SectionHead, LeadForm } from '../components/ui';
 import Coverflow from '../components/Coverflow';
 import { doc } from '../data/documentos';
 import { EMPRESA, TELEFONOS, AREAS, LINKS, whatsappUrl } from '../data/site';
+import { imgResp } from '../imagenes';
 
 const MAPA_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(EMPRESA.direccion)}&output=embed`;
+
+// El mapa de Google pesa ~430 KB de JS: se muestra una imagen del mismo mapa (41 KB)
+// y el mapa interactivo se carga solo cuando el usuario lo pide.
+function MapaOficinas() {
+  const [interactivo, setInteractivo] = useState(false);
+  if (interactivo) {
+    return <iframe title={`Mapa: ${EMPRESA.direccion}`} src={MAPA_EMBED} referrerPolicy="no-referrer-when-downgrade" />;
+  }
+  return (
+    <button type="button" className="ct-mapa-vista" onClick={() => setInteractivo(true)} aria-label={`Ver mapa interactivo: ${EMPRESA.direccion}`}>
+      <img {...imgResp('/img/mapa-oficinas.webp', 'contenido')} alt="" width={960} height={600} loading="lazy" decoding="async" />
+      <span className="ct-mapa-cta"><MapPin size={16} aria-hidden="true" /> Ver mapa interactivo</span>
+      <span className="ct-mapa-credito">Mapa © Google · INEGI</span>
+    </button>
+  );
+}
 
 // Canales por área, separados por segmento. Cada uno lleva sus teléfonos, WhatsApp y correo;
 // el WhatsApp y el correo salen de AREAS (site.js) para que todo llegue al área correcta.
@@ -144,7 +161,7 @@ export default function Contacto() {
   return (
     <>
       <section className="ct-hero">
-        <img src="/img/contacto-soporte.webp" alt="" className="ct-hero-foto" width={1024} height={572} fetchpriority="high" decoding="async" />
+        <img {...imgResp('/img/contacto-soporte.webp', 'portada')} alt="" className="ct-hero-foto" width={1024} height={572} fetchpriority="high" decoding="async" />
         <div className="container ct-hero-grid">
           <div>
             <span className="ct-status"><span className="ct-status-dot" aria-hidden="true" /> Atención {EMPRESA.horario.toLowerCase()}</span>
@@ -238,7 +255,7 @@ export default function Contacto() {
               </ul>
             </div>
             <div className="ct-mapa">
-              <iframe title={`Mapa: ${EMPRESA.direccion}`} src={MAPA_EMBED} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+              <MapaOficinas />
             </div>
             <div className="ct-info-body">
               <Ext className="btn btn-accent btn-block" href={EMPRESA.mapa}><Navigation size={16} /> Cómo llegar</Ext>

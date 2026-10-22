@@ -7,12 +7,13 @@ import { SectionHead, Checklist, Foto } from '../components/ui';
 import { BannerCotizar } from '../components/Cotiza';
 import { DIVISIONES } from '../data/servicios';
 import { TELEFONOS } from '../data/site';
+import { imgResp } from '../imagenes';
 
 export default function Empresas() {
   return (
     <>
       <section className="page-hero page-hero--foto page-hero--alto page-hero--entera">
-        <img src="/img/empresas-hero.webp" alt="" className="page-hero-foto" width={1600} height={893} fetchpriority="high" decoding="async" />
+        <img {...imgResp('/img/empresas-hero.webp', 'portada')} alt="" className="page-hero-foto" width={1600} height={893} fetchpriority="high" decoding="async" />
         <div className="container">
           <span className="eyebrow">Soluciones para empresas</span>
           <h1 className="h1 mt-1">Internet, TI y seguridad con un solo proveedor</h1>

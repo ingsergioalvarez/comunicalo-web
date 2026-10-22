@@ -63,7 +63,7 @@ function Header() {
     <header className="header">
       <div className="container nav">
         <Link to="/" className="logo" aria-label="Comunícalo de México, inicio">
-          <img src="/img/logo-comunicalo.png" alt="Comunícalo de México" width="125" height="38" />
+          <img src="/img/logo-comunicalo.webp" alt="Comunícalo de México" width="125" height="38" />
         </Link>
 
         <nav className="nav-links" aria-label="Principal">
@@ -117,7 +117,7 @@ function Footer() {
         <div className="footer-grid">
           <div>
             <Link to="/" className="logo" aria-label="Inicio">
-              <img src="/img/logo-comunicalo.png" alt="Comunícalo de México" width="157" height="48" loading="lazy" />
+              <img src="/img/logo-comunicalo.webp" alt="Comunícalo de México" width="157" height="48" loading="lazy" />
             </Link>
             <p className="mt-2">
               Concesionario de telecomunicaciones con Título de Concesión Única (IFT). Internet, telefonía, redes y seguridad para empresas, eventos y hogares.

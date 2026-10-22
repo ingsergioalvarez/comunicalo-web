@@ -29,6 +29,9 @@ export const TELEFONOS = {
   ventasHogarCel: { label: 'Celular y WhatsApp', num: '55 1802 0595', href: 'tel:+525518020595' },
   soporteHogar: { label: 'Teléfono', num: '55 2601 4010 opción 2', href: 'tel:+525526014010,2' },
   cobranzaHogar: { label: 'Teléfono', num: '55 2601 4010 opción 3', href: 'tel:+525526014010,3' },
+  // MAXVISION (Otumba y Axapusco): solo se muestran en su página
+  maxvisionFijo: { label: 'Teléfono fijo', num: '592 922 3842', href: 'tel:+525929223842' },
+  maxvisionCel: { label: 'Celular y WhatsApp', num: '55 3512 8042', href: 'tel:+525535128042' },
   // Del diagrama oficial de contratación: aclaraciones, quejas y pagos
   atencion: { label: 'Atención y pagos', num: '55 5239 4748 ext. 320', href: 'tel:+525552394748,320' },
 };
@@ -50,10 +53,13 @@ export const AREAS = {
   soporteHogar: { email: 'residencial@comunicalo.mx' },
   cobranzaHogar: { wa: WHATSAPP_BOT_HOGAR, email: 'residencial@comunicalo.mx' },
   quejasHogar: { wa: WHATSAPP_BOT_HOGAR, email: 'atc_clientes@comunicalo.mx' },
+  // MAXVISION: ventas y administración con números propios; las fallas las atiende soporteHogar.
+  // Sin correo propio: su "Envíala por correo" cae en ventas@.
+  ventasMaxvision: { wa: '525535128042' },
 };
 
 // Intereses del formulario general que atiende Ventas Hogar; el resto va a Ventas Empresas.
-const INTERESES_HOGAR = ['hogar', 'maxvision'];
+const INTERESES_HOGAR = ['hogar'];
 export function areaDeInteres(interes) {
   return INTERESES_HOGAR.includes(interes) ? 'ventasHogar' : 'ventasEmpresas';
 }

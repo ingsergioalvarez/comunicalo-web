@@ -2,6 +2,7 @@ import React from 'react';
 import { Activity, Globe } from 'lucide-react';
 import { SectionHead, CtaBand } from '../components/ui';
 import MapaCobertura from '../components/MapaCobertura';
+import { imgResp } from '../imagenes';
 
 const PASOS_FACTIBILIDAD = [
   { titulo: 'Nos compartes tu ubicación', texto: 'Envíanos las coordenadas, el enlace de Google Maps o la dirección del sitio que quieres conectar.' },
@@ -16,7 +17,7 @@ export default function Cobertura() {
       {/* HERO DE COBERTURA NACIONAL */}
       <section className="page-hero page-hero--foto page-hero--alto hero-cobertura">
         <img
-          src="/img/hero-cobertura.webp"
+          {...imgResp('/img/hero-cobertura.webp', 'portada')}
           alt="Infraestructura de telecomunicaciones en México: racks de fibra óptica, NOC y torres de microondas"
           className="page-hero-foto"
           width={1600}
