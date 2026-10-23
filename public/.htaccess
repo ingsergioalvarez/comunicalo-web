@@ -60,6 +60,8 @@ AddType text/javascript .js .mjs
   ExpiresByType audio/mpeg "access plus 30 days"
 </IfModule>
 <IfModule mod_headers.c>
+  # No anunciar la versión de PHP del servidor
+  Header always unset X-Powered-By
   <FilesMatch "\.(js|css|woff2)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>

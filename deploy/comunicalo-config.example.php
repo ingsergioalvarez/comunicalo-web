@@ -11,11 +11,12 @@ return [
   // Remitente: debe ser una cuenta de tu mismo dominio para que no caiga en spam
   'correo_remitente' => 'Sitio Comunícalo <web@comunicalo.mx>',
   // Quién recibe los avisos cuando el formulario no indica área (puede ser una lista)
-  'correo_destino'   => ['ventas@comunicalo.mx'],
+  'correo_destino'   => ['comercialempresarial@comunicalo.mx'],
   // Destino por área (mismas claves que AREAS en src/data/site.js)
   'correo_por_area'  => [
     'ventasEmpresas' => ['comercialempresarial@comunicalo.mx'],
-    'ventasHogar'    => ['ventas@comunicalo.mx'], // PENDIENTE: correo de ventas Hogar
-    'ventasMaxvision' => ['ventas@comunicalo.mx'], // PENDIENTE: correo de MAXVISION
+    // Hogar y MAXVISION contratan por WhatsApp; sus leads se guardan y se avisan a comercial
+    'ventasHogar'     => ['comercialempresarial@comunicalo.mx'],
+    'ventasMaxvision' => ['comercialempresarial@comunicalo.mx'],
   ],
 ];

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Phone, Menu, X, Moon, Sun, CreditCard, Gauge, MessageCircle, ChevronRight, MapPin, Clock, Mail, FileText } from 'lucide-react';
 import { Link, Ext, useRouter } from '../router';
-import { EMPRESA, TELEFONOS, LINKS, EMAIL_VENTAS, whatsappUrl } from '../data/site';
+import { EMPRESA, TELEFONOS, LINKS, AREAS, whatsappUrl } from '../data/site';
 import { DIVISIONES } from '../data/servicios';
 import { doc } from '../data/documentos';
 
@@ -168,7 +168,8 @@ function Footer() {
               <li><a href={TELEFONOS.empresas.href}>Empresas: <strong>{TELEFONOS.empresas.num}</strong></a></li>
               <li><a href={TELEFONOS.empresas2.href}>Empresas: <strong>{TELEFONOS.empresas2.num}</strong></a></li>
               <li><a href={TELEFONOS.hogar.href}>Hogar: <strong>{TELEFONOS.hogar.num}</strong></a></li>
-              <li><a href={`mailto:${EMAIL_VENTAS}`} style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}><Mail size={14} /> {EMAIL_VENTAS}</a></li>
+              <li><a href={`mailto:${AREAS.ventasEmpresas.email}`} style={{ display: 'inline-flex', gap: 6, alignItems: 'center', overflowWrap: 'anywhere' }}><Mail size={14} style={{ flexShrink: 0 }} /> {AREAS.ventasEmpresas.email}</a></li>
+              <li><a href={`mailto:${AREAS.soporteHogar.email}`} style={{ display: 'inline-flex', gap: 6, alignItems: 'center', overflowWrap: 'anywhere' }}><Mail size={14} style={{ flexShrink: 0 }} /> {AREAS.soporteHogar.email}</a></li>
               <li style={{ display: 'flex', gap: 6 }}><MapPin size={14} style={{ marginTop: 4, flexShrink: 0 }} /> <Ext href={EMPRESA.mapa}>{EMPRESA.direccion}</Ext></li>
               <li style={{ display: 'flex', gap: 6, alignItems: 'center' }}><Clock size={14} /> {EMPRESA.horario}</li>
             </ul>

@@ -6,7 +6,7 @@ import { imgResp } from '../imagenes';
 
 const PASOS_FACTIBILIDAD = [
   { titulo: 'Nos compartes tu ubicación', texto: 'Envíanos las coordenadas, el enlace de Google Maps o la dirección del sitio que quieres conectar.' },
-  { titulo: 'Validamos la solución idónea', texto: 'Revisamos qué llega a ese punto: red propia, cobertura extendida, interconexión con carriers, LTE o satelital.' },
+  { titulo: 'Validamos la solución idónea', texto: 'Revisamos qué llega a ese punto: red propia, cobertura extendida, alianzas de conectividad, LTE o satelital.' },
   { titulo: 'Trabajo consultivo', texto: 'Un ingeniero entiende tu operación (usuarios, aplicaciones, respaldo) para dimensionar el servicio correcto.' },
   { titulo: 'Propuesta a tu medida', texto: 'Recibes una propuesta formal por escrito y, en proyectos especiales, agendamos visita técnica.' },
 ];
@@ -34,7 +34,7 @@ export default function Cobertura() {
           </div>
           <h1 className="h1 mt-1">Cobertura Nacional 100%: Fibra Óptica, Microondas, Satelital y LTE</h1>
           <p className="lead">
-            Operamos <strong>red propia de alta capacidad</strong> en la Zona Centro (Morelos, Estado de México, Ciudad de México, Puebla, Hidalgo y Tlaxcala) con fibra directa y microondas. Y llegamos a <strong>cada rincón de los 32 estados de la República Mexicana</strong> mediante nuestra <strong>cobertura extendida</strong>, interconexiones con carriers, conectividad LTE y enlaces satelitales.
+            Operamos <strong>red propia de alta capacidad</strong> en la Zona Centro (Morelos, Estado de México, Ciudad de México, Puebla, Hidalgo y Tlaxcala) con fibra directa y microondas. Y llegamos a <strong>cada rincón de los 32 estados de la República Mexicana</strong> mediante nuestra <strong>cobertura extendida</strong>, alianzas de conectividad, conectividad LTE y enlaces satelitales.
           </p>
         </div>
       </section>
@@ -51,7 +51,7 @@ export default function Cobertura() {
                 Red propia, cobertura extendida y cobertura nacional
               </h2>
               <p className="lead" style={{ color: '#C9D8EA' }}>
-                Mapa de infraestructura en los 32 estados de México: 6 estados centrales con <strong>Red Propia</strong> directa de fibra y microondas, <strong>cobertura extendida</strong> de fibra y microondas en 19 estados, interconexión con carriers donde no llegamos directo, y LTE y satelital en todo el país.
+                Mapa de infraestructura en los 32 estados de México: 6 estados centrales con <strong>Red Propia</strong> directa de fibra y microondas, <strong>cobertura extendida</strong> de fibra y microondas en 19 estados, alianzas de conectividad donde no llegamos directo, y LTE y satelital en todo el país.
               </p>
             </div>
 

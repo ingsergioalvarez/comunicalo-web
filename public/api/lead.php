@@ -11,6 +11,7 @@
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
+header_remove('X-Powered-By'); // no anunciar la versión de PHP
 
 function responder($codigo, $datos) {
   http_response_code($codigo);

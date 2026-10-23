@@ -25,8 +25,29 @@ function resolver(urlPath) {
   return null;
 }
 
+// Los formularios guardan en la base real a través de la copia de prueba de lead.php del hosting
+const LEAD_PRUEBA = 'https://comunicalo.mx/api-prueba/lead.php';
+
+async function reenviarLead(req, res) {
+  const partes = [];
+  for await (const p of req) partes.push(p);
+  try {
+    const r = await fetch(LEAD_PRUEBA, {
+      method: req.method,
+      headers: { 'Content-Type': 'application/json', 'User-Agent': req.headers['user-agent'] || '' },
+      body: req.method === 'POST' ? Buffer.concat(partes) : undefined,
+    });
+    res.writeHead(r.status, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(await r.text());
+  } catch {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end('{"ok":false,"error":"Sin conexión con el hosting"}');
+  }
+}
+
 http.createServer((req, res) => {
   const { pathname } = new URL(req.url, 'http://x');
+  if (pathname === '/api/lead.php') return reenviarLead(req, res);
   const archivo = resolver(pathname);
   const destino = archivo || path.join(dist, '404.html');
   const tamano = fs.statSync(destino).size;

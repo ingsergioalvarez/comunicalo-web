@@ -36,7 +36,7 @@ export const TELEFONOS = {
   atencion: { label: 'Atención y pagos', num: '55 5239 4748 ext. 320', href: 'tel:+525552394748,320' },
 };
 
-export const EMAIL_VENTAS = 'ventas@comunicalo.mx';
+export const EMAIL_VENTAS = 'comercialempresarial@comunicalo.mx';
 
 export const WHATSAPP_NUM = '525526014888';
 // Bot de WhatsApp de Hogar (quejas, pagos, saldos y estados de cuenta): +52 1 55 7877 0441
@@ -48,13 +48,13 @@ export const AREAS = {
   ventasEmpresas: { wa: '525525727241', email: 'comercialempresarial@comunicalo.mx' },
   noc: { wa: '525610685395', email: 'noc@comunicalo.mx' },
   facturacion: { email: 'facturacion@comunicalo.mx' },
-  // Ventas Hogar no tiene correo propio: su "Envíala por correo" cae en ventas@ (valor por omisión de mailtoUrl)
+  // Ventas Hogar no tiene correo propio: su "Envíala por correo" cae en comercialempresarial@ (valor por omisión de mailtoUrl)
   ventasHogar: { wa: '525518020595' },
   soporteHogar: { email: 'residencial@comunicalo.mx' },
   cobranzaHogar: { wa: WHATSAPP_BOT_HOGAR, email: 'residencial@comunicalo.mx' },
   quejasHogar: { wa: WHATSAPP_BOT_HOGAR, email: 'atc_clientes@comunicalo.mx' },
   // MAXVISION: ventas y administración con números propios; las fallas las atiende soporteHogar.
-  // Sin correo propio: su "Envíala por correo" cae en ventas@.
+  // Sin correo propio: su "Envíala por correo" cae en comercialempresarial@.
   ventasMaxvision: { wa: '525535128042' },
 };
 

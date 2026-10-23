@@ -17,11 +17,11 @@ export const NIVELES = {
     texto: 'Enlaces de fibra y microondas a través de nuestra cobertura extendida.',
   },
   interconexion: {
-    nombre: 'Interconexión con carriers',
+    nombre: 'Alianzas de conectividad',
     color: '#E2ECF8',
     img: '/img/cobertura/interconexion.webp',
-    tecnologia: 'Según el carrier disponible en la zona',
-    texto: 'Validamos tu enlace mediante nuestras interconexiones con carriers.',
+    tecnologia: 'Según el aliado disponible en la zona',
+    texto: 'Validamos tu enlace mediante nuestras alianzas de conectividad.',
   },
 };
 

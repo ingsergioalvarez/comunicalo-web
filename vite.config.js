@@ -3,7 +3,16 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react()],
-  server: { port: 5173 },
+  server: {
+    port: 5173,
+    // En desarrollo los formularios guardan en la base real a través de la copia de prueba de lead.php
+    proxy: {
+      '/api/lead.php': {
+        target: 'https://comunicalo.mx', changeOrigin: true, secure: true,
+        rewrite: () => '/api-prueba/lead.php',
+      },
+    },
+  },
   build: {
     target: 'es2019',
     // Los documentos (PDF/MP3) de /public solo se copian en el build del cliente
